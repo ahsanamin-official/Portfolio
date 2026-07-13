@@ -97,6 +97,7 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable', editing ? 'true' : 'false'));
     document.getElementById('editToggle').textContent = editing ? '✓ Done Editing' : '✎ Edit Site';
     if(!editing) document.getElementById('richToolbar').classList.remove('show');
+    if(editing){ loadGhConfig(); ghWatch.start(); } else { ghWatch.stop(); }
   }
 
   /* ---------- PIN-GATED EDIT MODE ---------- */
@@ -127,6 +128,166 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
   }
 
   function setVar(name, val){ document.documentElement.style.setProperty(name, val); }
+
+  /* ---------- GITHUB SYNC ---------- */
+  const GH_CONFIG_KEY = 'ghSyncConfig';
+  let ghToken = null;
+  let ghAutoSave = true;
+  let ghSaveTimer = null;
+  let ghSaving = false;
+
+  function loadGhConfig(){
+    try{
+      const saved = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || 'null');
+      if(saved){
+        const o = document.getElementById('ghOwner'), r = document.getElementById('ghRepo'),
+              b = document.getElementById('ghBranch'), p = document.getElementById('ghPath');
+        if(o && !o.value) o.value = saved.owner || '';
+        if(r && !r.value) r.value = saved.repo || '';
+        if(b) b.value = saved.branch || 'main';
+        if(p) p.value = saved.path || 'index.html';
+      }
+    }catch(e){}
+    try{
+      const t = sessionStorage.getItem('ghToken');
+      if(t){ ghToken = t; setGhStatus('Connected — token active in this tab', 'connected'); }
+    }catch(e){}
+  }
+
+  function saveGhConfig(){
+    const cfg = {
+      owner: (document.getElementById('ghOwner').value || '').trim(),
+      repo: (document.getElementById('ghRepo').value || '').trim(),
+      branch: (document.getElementById('ghBranch').value || '').trim() || 'main',
+      path: (document.getElementById('ghPath').value || '').trim() || 'index.html'
+    };
+    localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(cfg));
+    return cfg;
+  }
+
+  function setGhStatus(msg, kind){
+    const el = document.getElementById('ghStatus');
+    if(!el) return;
+    el.textContent = msg;
+    el.className = 'gh-status' + (kind ? ' ' + kind : '');
+  }
+
+  function connectGitHub(){
+    const tokenInput = document.getElementById('ghTokenInput');
+    const token = (tokenInput.value || '').trim();
+    if(!token){ setGhStatus('Paste a personal access token first.', 'error'); return; }
+    const cfg = saveGhConfig();
+    if(!cfg.owner || !cfg.repo){ setGhStatus('Add repo owner and name first.', 'error'); return; }
+    ghToken = token;
+    try{ sessionStorage.setItem('ghToken', token); }catch(e){}
+    tokenInput.value = '';
+    setGhStatus('Connected — token active in this tab', 'connected');
+  }
+
+  function disconnectGitHub(){
+    ghToken = null;
+    try{ sessionStorage.removeItem('ghToken'); }catch(e){}
+    setGhStatus('Not connected');
+  }
+
+  function utf8ToBase64(str){
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  async function getFileSha(cfg){
+    const url = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}?ref=${encodeURIComponent(cfg.branch)}`;
+    const res = await fetch(url, {
+      headers:{ 'Authorization':`Bearer ${ghToken}`, 'Accept':'application/vnd.github+json' }
+    });
+    if(res.status === 404) return null;
+    if(!res.ok) throw new Error('Could not read current file (' + res.status + ')');
+    const data = await res.json();
+    return data.sha;
+  }
+
+  async function pushToGitHub(commitMessage){
+    if(!ghToken){ setGhStatus('Not connected — paste a token and click Connect.', 'error'); return; }
+    const cfg = saveGhConfig();
+    if(!cfg.owner || !cfg.repo){ setGhStatus('Add repo owner and name first.', 'error'); return; }
+    if(ghSaving) return;
+    ghSaving = true;
+    setGhStatus('Saving to GitHub…', 'saving');
+    const wasEditing = document.body.classList.contains('edit-mode');
+    const prevActiveId = document.querySelector('.sheet.active') ? document.querySelector('.sheet.active').id : null;
+    try{
+      if(wasEditing){
+        document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable', 'false'));
+        document.body.classList.remove('edit-mode');
+      }
+      const first = document.querySelector('.sheet-tab');
+      if(first) setActive(first.getAttribute('data-target'));
+      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const sha = await getFileSha(cfg);
+      const body = {
+        message: commitMessage || 'Update portfolio via site editor',
+        content: utf8ToBase64(html),
+        branch: cfg.branch
+      };
+      if(sha) body.sha = sha;
+      const putUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
+      const res = await fetch(putUrl, {
+        method:'PUT',
+        headers:{
+          'Authorization':`Bearer ${ghToken}`,
+          'Accept':'application/vnd.github+json',
+          'Content-Type':'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+      if(!res.ok){
+        const errText = await res.text();
+        throw new Error(res.status + ': ' + errText);
+      }
+      setGhStatus('Saved to GitHub ✓ ' + new Date().toLocaleTimeString(), 'connected');
+    }catch(err){
+      console.error(err);
+      setGhStatus('Save failed — check token/repo/branch settings.', 'error');
+    }finally{
+      if(wasEditing){
+        document.body.classList.add('edit-mode');
+        document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable', 'true'));
+      }
+      if(prevActiveId) setActive(prevActiveId);
+      ghSaving = false;
+    }
+  }
+
+  function queueGitHubSave(){
+    if(!ghAutoSave || !ghToken) return;
+    clearTimeout(ghSaveTimer);
+    ghSaveTimer = setTimeout(()=>pushToGitHub('Auto-save from site editor'), 2500);
+  }
+
+  /* Watches the page for edits while in edit mode and queues a GitHub save. */
+  const ghWatch = (function(){
+    let observer = null;
+    let armTimer = null;
+    let armed = false;
+    function start(){
+      armed = false;
+      clearTimeout(armTimer);
+      if(!observer){
+        observer = new MutationObserver(()=>{ if(armed) queueGitHubSave(); });
+      }
+      observer.observe(document.documentElement, {
+        childList:true, subtree:true, attributes:true, characterData:true
+      });
+      // Ignore the burst of attribute changes toggleEdit() itself causes.
+      armTimer = setTimeout(()=>{ armed = true; }, 600);
+    }
+    function stop(){
+      armed = false;
+      clearTimeout(armTimer);
+      clearTimeout(ghSaveTimer);
+      if(observer) observer.disconnect();
+    }
+    return { start, stop };
+  })();
 
   /* ---------- PROJECT FILTERS ---------- */
   function setProjectFilter(cat, btn){
@@ -819,4 +980,11 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
       btn.textContent = originalLabel;
       btn.disabled = false;
     }
+  }
+
+  /* Restore any saved GitHub sync settings / session token on page load. */
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', loadGhConfig);
+  } else {
+    loadGhConfig();
   }
