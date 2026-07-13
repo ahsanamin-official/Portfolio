@@ -1,4 +1,4 @@
-  document.getElementById('tbDate').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+document.getElementById('tbDate').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
 
   /* ---------- SCROLL-REVEAL ANIMATIONS (home sections) ---------- */
   (function(){
@@ -17,6 +17,42 @@
       });
     }, {threshold:0.2, rootMargin:'0px 0px -40px 0px'});
     blocks.forEach(b=>io.observe(b));
+  })();
+
+  /* ---------- STAT COUNT-UP (home "By The Numbers") ---------- */
+  (function(){
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const counters = document.querySelectorAll('.stat-count');
+    if(!counters.length) return;
+
+    function animateCounter(el){
+      const target = parseInt(el.getAttribute('data-target'), 10) || 0;
+      if(reduceMotion || target === 0){ el.textContent = target; return; }
+      const duration = 1200;
+      const start = performance.now();
+      function tick(now){
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+        el.textContent = Math.round(eased * target);
+        if(progress < 1){ requestAnimationFrame(tick); } else { el.textContent = target; }
+      }
+      requestAnimationFrame(tick);
+    }
+
+    const statsGrid = document.getElementById('statsGrid');
+    if(!statsGrid || !('IntersectionObserver' in window)){
+      counters.forEach(animateCounter);
+      return;
+    }
+    const statsIo = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          counters.forEach(animateCounter);
+          statsIo.unobserve(entry.target);
+        }
+      });
+    }, {threshold:0.35});
+    statsIo.observe(statsGrid);
   })();
 
   /* ---------- BACK TO TOP ---------- */
