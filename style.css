@@ -1,4 +1,4 @@
-  :root{
+:root{
     --navy:#16233A;
     --navy-2:#1E2F4D;
     --paper:#F7F5EF;
@@ -118,7 +118,7 @@
     font-family:'IBM Plex Mono',monospace;font-size:.8rem;letter-spacing:.03em;
     display:inline-flex;align-items:center;gap:6px;text-decoration:none;
   }
-  .reveal-block .btn.small-link:hover{color:var(--amber);}
+  .reveal-block .btn.small-link:hover{color:var(--navy-2);}
   .reveal-block .btn.small-link svg{width:14px;height:14px;transition:transform .15s ease;}
   .reveal-block .btn.small-link:hover svg{transform:translateX(3px);}
   @media(max-width:640px){.reveal-grid{grid-template-columns:1fr;}.reveal-num{padding-top:0;}}
