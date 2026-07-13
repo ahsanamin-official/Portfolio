@@ -774,7 +774,7 @@
     <label class="gh-label">Personal access token</label>
     <input type="password" id="ghTokenInput" placeholder="Paste token — kept only in this tab">
     <div class="gh-btn-row">
-      <button onclick="connectGitHub()">🔗 Connect</button>
+      <button id="ghConnectBtn" onclick="connectGitHub()">🔗 Connect</button>
       <button onclick="disconnectGitHub()">Disconnect</button>
     </div>
     <label class="gh-check-row"><input type="checkbox" id="ghAutoSaveToggle" checked onchange="ghAutoSave=this.checked"> Auto-save every change to GitHub</label>
