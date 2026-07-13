@@ -170,18 +170,52 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     if(!el) return;
     el.textContent = msg;
     el.className = 'gh-status' + (kind ? ' ' + kind : '');
+    el.scrollIntoView({block:'nearest', behavior:'smooth'});
   }
 
-  function connectGitHub(){
+  async function connectGitHub(){
     const tokenInput = document.getElementById('ghTokenInput');
     const token = (tokenInput.value || '').trim();
     if(!token){ setGhStatus('Paste a personal access token first.', 'error'); return; }
     const cfg = saveGhConfig();
     if(!cfg.owner || !cfg.repo){ setGhStatus('Add repo owner and name first.', 'error'); return; }
-    ghToken = token;
-    try{ sessionStorage.setItem('ghToken', token); }catch(e){}
-    tokenInput.value = '';
-    setGhStatus('Connected — token active in this tab', 'connected');
+
+    const btn = document.getElementById('ghConnectBtn');
+    const originalLabel = btn ? btn.textContent : null;
+    if(btn){ btn.disabled = true; btn.textContent = 'Checking…'; }
+    setGhStatus('Checking token and repo access…', 'saving');
+
+    try{
+      const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}`, {
+        headers:{ 'Authorization':`Bearer ${token}`, 'Accept':'application/vnd.github+json' }
+      });
+      if(res.status === 401 || res.status === 403){
+        setGhStatus('Token rejected — check it\'s valid and not expired.', 'error');
+        return;
+      }
+      if(res.status === 404){
+        setGhStatus('Repo not found — check owner/repo spelling and token access.', 'error');
+        return;
+      }
+      if(!res.ok){
+        setGhStatus('GitHub returned an error (' + res.status + '). Try again.', 'error');
+        return;
+      }
+      const repoData = await res.json();
+      if(repoData.permissions && repoData.permissions.push === false){
+        setGhStatus('Connected, but this token has read-only access — saves will fail.', 'error');
+      } else {
+        setGhStatus('Connected to ' + cfg.owner + '/' + cfg.repo + ' ✓', 'connected');
+      }
+      ghToken = token;
+      try{ sessionStorage.setItem('ghToken', token); }catch(e){}
+      tokenInput.value = '';
+    }catch(err){
+      console.error(err);
+      setGhStatus('Network error — could not reach GitHub. Check your connection.', 'error');
+    }finally{
+      if(btn){ btn.disabled = false; btn.textContent = originalLabel; }
+    }
   }
 
   function disconnectGitHub(){
