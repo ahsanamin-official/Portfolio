@@ -754,12 +754,39 @@
     <button onclick="setWallpaperUrl(document.getElementById('wallpaperUrlInput').value)">Set background</button>
     <button onclick="clearWallpaper()">Reset to grid background</button>
   </div>
+  <div id="githubSyncRow">
+    <h5>GitHub sync</h5>
+    <div id="ghStatus" class="gh-status">Not connected</div>
+    <label class="gh-label">Repo owner</label>
+    <input type="text" id="ghOwner" placeholder="e.g. ahsan-amin">
+    <label class="gh-label">Repo name</label>
+    <input type="text" id="ghRepo" placeholder="e.g. portfolio">
+    <div class="gh-row2">
+      <div>
+        <label class="gh-label">Branch</label>
+        <input type="text" id="ghBranch" placeholder="main" value="main">
+      </div>
+      <div>
+        <label class="gh-label">File path</label>
+        <input type="text" id="ghPath" placeholder="index.html" value="index.html">
+      </div>
+    </div>
+    <label class="gh-label">Personal access token</label>
+    <input type="password" id="ghTokenInput" placeholder="Paste token — kept only in this tab">
+    <div class="gh-btn-row">
+      <button onclick="connectGitHub()">🔗 Connect</button>
+      <button onclick="disconnectGitHub()">Disconnect</button>
+    </div>
+    <label class="gh-check-row"><input type="checkbox" id="ghAutoSaveToggle" checked onchange="ghAutoSave=this.checked"> Auto-save every change to GitHub</label>
+    <button class="primary" onclick="pushToGitHub('Manual save from site editor')">⬆ Save now to GitHub</button>
+    <div class="hint">Create a fine-grained personal access token scoped ONLY to this repository with "Contents: Read and write" permission — nothing else. The token is kept in this browser tab's session only (never saved to disk), and is cleared when you close the tab or click Disconnect. Anyone who has this PIN and access to your unlocked browser tab could read the token while it's connected, so don't leave a connected session unattended, and rotate/revoke the token periodically from GitHub's settings.</div>
+  </div>
   <button class="primary" onclick="exportSite()">⬇ Export site (.html)</button>
   <button id="pdfExportBtn" class="primary" onclick="exportProfilePDF()">⬇ Export profile (PDF)</button>
   <button onclick="document.getElementById('importFile').click()">⬆ Import saved file</button>
   <input type="file" id="importFile" accept=".html" style="display:none" onchange="importSite(event)">
   <button onclick="toggleEdit()">✓ Done editing</button>
-  <div class="hint">Click any text to edit it — a formatting toolbar (bold, italic, bullets, alignment, font, size) appears above your cursor and stays put until you click well away from it. Use the dashed “+” buttons to add cards, and the “Photo / Video / Link” buttons to open the media picker — upload files directly or paste a URL (YouTube/Vimeo links auto-embed). Photos open full-size on click. Export (.html) downloads a working copy of the whole site — upload it to free static hosting (Netlify Drop, GitHub Pages or Vercel) to publish it. Export (PDF) turns every page into a shareable, print-ready PDF — handy for attaching to emails or LinkedIn, just like downloading a LinkedIn profile. Drag this panel by its top bar to move it out of the way.</div>
+  <div class="hint">Click any text to edit it — a formatting toolbar (bold, italic, bullets, alignment, font, size) appears above your cursor and stays put until you click well away from it. Use the dashed “+” buttons to add cards, and the “Photo / Video / Link” buttons to open the media picker — upload files directly or paste a URL (YouTube/Vimeo links auto-embed). Photos open full-size on click. Export (.html) downloads a working copy of the whole site — upload it to free static hosting (Netlify Drop, GitHub Pages or Vercel) to publish it. Export (PDF) turns every page into a shareable, print-ready PDF — handy for attaching to emails or LinkedIn, just like downloading a LinkedIn profile. Connect GitHub sync above to have edits — projects, text, fonts, theme colours, background — committed straight to your repo automatically. Drag this panel by its top bar to move it out of the way.</div>
 </div>
 
 <div id="richToolbar">
