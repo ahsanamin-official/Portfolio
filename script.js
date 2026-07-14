@@ -246,16 +246,24 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     if(ghSaving) return;
     ghSaving = true;
     setGhStatus('Saving to GitHub…', 'saving');
-    const wasEditing = document.body.classList.contains('edit-mode');
-    const prevActiveId = document.querySelector('.sheet.active') ? document.querySelector('.sheet.active').id : null;
     try{
-      if(wasEditing){
-        document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable', 'false'));
-        document.body.classList.remove('edit-mode');
+      // Build the snapshot from a detached clone so saving never touches the
+      // live page you're editing (previously this called setActive() on the
+      // real DOM, which the auto-save watcher then saw as a new edit and
+      // queued another save — an infinite jump-to-Home loop).
+      const clone = document.documentElement.cloneNode(true);
+      clone.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable', 'false'));
+      clone.classList.remove('edit-mode');
+      clone.querySelectorAll('.sheet').forEach(s=>s.classList.remove('active','sheet-in','sheet-out'));
+      clone.querySelectorAll('.sheet-tab').forEach(t=>t.classList.remove('active'));
+      const firstTab = clone.querySelector('.sheet-tab');
+      if(firstTab){
+        const targetId = firstTab.getAttribute('data-target');
+        const homeSheet = clone.querySelector('#' + targetId);
+        if(homeSheet) homeSheet.classList.add('active');
+        firstTab.classList.add('active');
       }
-      const first = document.querySelector('.sheet-tab');
-      if(first) setActive(first.getAttribute('data-target'));
-      const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const html = '<!DOCTYPE html>\n' + clone.outerHTML;
       const sha = await getFileSha(cfg);
       const body = {
         message: commitMessage || 'Update portfolio via site editor',
@@ -282,11 +290,6 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
       console.error(err);
       setGhStatus('Save failed — check token/repo/branch settings.', 'error');
     }finally{
-      if(wasEditing){
-        document.body.classList.add('edit-mode');
-        document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable', 'true'));
-      }
-      if(prevActiveId) setActive(prevActiveId);
       ghSaving = false;
     }
   }
