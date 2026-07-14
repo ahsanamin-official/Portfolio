@@ -19,10 +19,18 @@
     <button class="sheet-tab" data-target="about" onclick="setActive('about')"><span class="label" contenteditable="false">About</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="contact" onclick="setActive('contact')"><span class="label" contenteditable="false">Contact Us</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
   </div>
-  <button id="sidebarToggleBtn" onclick="openSidebar()" aria-label="Open more sections" aria-expanded="false" aria-controls="moreSidebar">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-    <span>More</span>
-  </button>
+  <div id="moreDropdownWrap" class="nav-dropdown-wrap">
+    <button id="sidebarToggleBtn" onclick="toggleMoreMenu()" aria-label="Open more sections" aria-expanded="false" aria-controls="moreSidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      <span>More</span>
+      <svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div id="moreDropdownPanel" role="menu" aria-label="More sections">
+      <button type="button" class="sheet-tab dropdown-item" data-target="experience" role="menuitem" onclick="setActive('experience');closeMoreMenu();">Experience</button>
+      <button type="button" class="sheet-tab dropdown-item" data-target="skills" role="menuitem" onclick="setActive('skills');closeMoreMenu();">Skills</button>
+      <button type="button" class="sheet-tab dropdown-item" data-target="leadership" role="menuitem" onclick="setActive('leadership');closeMoreMenu();">Leadership</button>
+    </div>
+  </div>
   <div id="siteSearchWrap">
     <input type="text" id="siteSearchInput" placeholder="Search here…" oninput="runSiteSearch(this.value)" onfocus="runSiteSearch(this.value)">
     <div id="siteSearchResults"></div>
@@ -187,6 +195,44 @@
             </a>
           </div>
         </div>
+
+        <div class="top-projects-grid" id="topProjectsGrid">
+          <button type="button" class="project-tile" style="background-image:url('https://images.unsplash.com/photo-1777919393730-463e2c0b7f4c?auto=format&amp;fit=crop&amp;w=900&amp;q=80')" onclick="setActive('projects')">
+            <span class="pt-overlay"></span>
+            <span class="pt-text">
+              <span class="pt-title" contenteditable="false">Compressive Strength Prediction</span>
+              <span class="pt-sub" contenteditable="false">Final Year Project — Digital Image Analysis</span>
+            </span>
+          </button>
+          <button type="button" class="project-tile" style="background-image:url('https://images.unsplash.com/photo-1706552128399-43e2baff0fe5?auto=format&amp;fit=crop&amp;w=900&amp;q=80')" onclick="setActive('projects')">
+            <span class="pt-overlay"></span>
+            <span class="pt-text">
+              <span class="pt-title" contenteditable="false">Steel Fink Roof Truss</span>
+              <span class="pt-sub" contenteditable="false">Analysis &amp; design in CSI ETABS</span>
+            </span>
+          </button>
+          <button type="button" class="project-tile" style="background-image:url('https://images.unsplash.com/photo-1762320723940-464123fef1ec?auto=format&amp;fit=crop&amp;w=900&amp;q=80')" onclick="setActive('projects')">
+            <span class="pt-overlay"></span>
+            <span class="pt-text">
+              <span class="pt-title" contenteditable="false">Steel Bridge Design</span>
+              <span class="pt-sub" contenteditable="false">AASHTO deck truss under HL-93 loading</span>
+            </span>
+          </button>
+          <button type="button" class="project-tile" style="background-image:url('https://images.unsplash.com/photo-1623620893978-aa52349a1d7e?auto=format&amp;fit=crop&amp;w=900&amp;q=80')" onclick="setActive('projects')">
+            <span class="pt-overlay"></span>
+            <span class="pt-text">
+              <span class="pt-title" contenteditable="false">Water-Retaining Structures</span>
+              <span class="pt-sub" contenteditable="false">Overhead tanks &amp; RC swimming pool design</span>
+            </span>
+          </button>
+          <button type="button" class="project-tile" style="background-image:url('https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?auto=format&amp;fit=crop&amp;w=900&amp;q=80')" onclick="setActive('projects')">
+            <span class="pt-overlay"></span>
+            <span class="pt-text">
+              <span class="pt-title" contenteditable="false">Frame Structure Design</span>
+              <span class="pt-sub" contenteditable="false">ETABS model — reinforced concrete framing</span>
+            </span>
+          </button>
+        </div>
       </div>
 
       <div class="reveal-row">
@@ -301,363 +347,429 @@
     </div>
     <div class="grid-2" id="projectsGrid">
 
-      <div class="card" data-cat="python estimation">
+      <div class="card" data-cat="python estimation" data-pid="p1">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Final Year Project — Prediction of Compressive Strength using Digital Image Analysis</h3>
         <span class="meta" contenteditable="false">FYP Group Leader · Team of 4</span>
         <ul contenteditable="false"><li>Compiled a dataset by casting 100 specimens, analysing with DIA, and performing destructive testing per ASTM/BS standards.</li><li>Compared predicted vs. experimental strengths to validate the non-destructive DIA approach.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p1')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="project-management structure">
+      <div class="card" data-cat="project-management structure" data-pid="p2">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Case Study — Citicorp Center: Professional Conduct by William LeMessurier</h3>
         <span class="meta" contenteditable="false">Professional Ethics in Engineering</span>
         <ul contenteditable="false"><li>Video presentation awarded "Best Video Presentation" by the course instructor.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p2')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure geotech">
+      <div class="card" data-cat="structure geotech" data-pid="p3">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Analysis &amp; Design of Determinate &amp; Indeterminate Beams — Basement Roof Slab, Swat Region</h3>
         <span class="meta" contenteditable="false">Structural Analysis</span>
         <ul contenteditable="false"><li>Recognised as Best Video Presenter among all four departmental sections of Batch 2022.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p3')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p4">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Adequacy &amp; Feasibility Analysis of Wood Samples for a Wooden House</h3>
         <span class="meta" contenteditable="false">Mechanics of Materials</span>
         <ul contenteditable="false"><li>Recognised as Best Technical Report Writer, departmental section, Batch 2022.</li><li>Video presentation awarded "Best Video Presentation."</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p4')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure estimation">
+      <div class="card" data-cat="structure estimation" data-pid="p5">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Analysis &amp; Design of a Steel Fink Roof Truss — CSI ETABS &amp; Design Summary</h3>
         <span class="meta" contenteditable="false">Steel Structures</span>
         <ul contenteditable="false"><li>All computations run through automated Excel sheets (axial members, corrugated sheets, purlins, welds) based on LRFD load combinations.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p5')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="python">
+      <div class="card" data-cat="python" data-pid="p6">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Python-based Engineering Programs</h3>
         <span class="meta" contenteditable="false">Numerical computing &amp; ML in complex engineering problems</span>
         <ul contenteditable="false"><li>Simply-supported beam deflection calculator.</li><li>Reduced levels by Rise &amp; Fall and Height-of-Instrument methods.</li><li>Centroid calculator for X, C, L, I and T sections.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p6')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p7">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Frame Structure Design</h3>
         <span class="meta" contenteditable="false">Design of Structures — coursework portfolio</span>
         <ul contenteditable="false"><li>Analysed and designed the Apple Park structural model in ETABS with heavily reinforced inverted T-beams and rectangular columns, simplifying the slab system to general slabs while keeping the overall framing concept.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p7')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p8">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Base Plate Design</h3>
         <span class="meta" contenteditable="false">Design of Structures — coursework portfolio</span>
         <ul contenteditable="false"><li>Analysed and designed steel base plates under axial and eccentric loading, with and without anchor bolts.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p8')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p9">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Steel Bridge Design</h3>
         <span class="meta" contenteditable="false">Design of Structures — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed a steel deck truss bridge to AASHTO specifications — RC deck slab, stringers, cross beams and truss members — evaluated under HL-93 loading for strength, stability and serviceability.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p9')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p10">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Retaining Walls</h3>
         <span class="meta" contenteditable="false">Design of Structures — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed gravity and cantilever retaining walls, checking stability against overturning, sliding and uplift.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p10')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p11">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Water-Retaining Structures</h3>
         <span class="meta" contenteditable="false">Design of Structures — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed on-grade and underground tanks (one-way vertical, one-way horizontal and two-way wall action), an overhead water tank in ETABS, and a reinforced concrete swimming pool for empty and full-pool loading cases.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p11')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure">
+      <div class="card" data-cat="structure" data-pid="p12">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Masonry House Design</h3>
         <span class="meta" contenteditable="false">Design of Structures — coursework portfolio</span>
         <ul contenteditable="false"><li>Developed a beam-column-slab layout for an economical residential load path, applying concealed beams and depressed slabs.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p12')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure estimation">
+      <div class="card" data-cat="structure estimation" data-pid="p13">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Column Design</h3>
         <span class="meta" contenteditable="false">Plain &amp; Reinforced Concrete — coursework portfolio</span>
         <ul contenteditable="false"><li>Analysed and designed concentrically and eccentrically (uniaxial &amp; biaxial) loaded columns using the Superposition, Reciprocal and Load Contour methods, and SP Column software.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p13')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure estimation">
+      <div class="card" data-cat="structure estimation" data-pid="p14">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Flat Slab Design</h3>
         <span class="meta" contenteditable="false">Plain &amp; Reinforced Concrete — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed slab systems via the Direct Design Method — flat plate (no beams), flat slab with edge beams, and flat slab with beams.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p14')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure estimation">
+      <div class="card" data-cat="structure estimation" data-pid="p15">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Footing Design</h3>
         <span class="meta" contenteditable="false">Plain &amp; Reinforced Concrete — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed isolated, combined, strap and continuous footings.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p15')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="structure estimation">
+      <div class="card" data-cat="structure estimation" data-pid="p16">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Miscellaneous RC Topics</h3>
         <span class="meta" contenteditable="false">Plain &amp; Reinforced Concrete — coursework portfolio</span>
         <ul contenteditable="false"><li>Studied bond and development length, construction/contraction/expansion/cold joints, and tension &amp; compression splices.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p16')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p17">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Rigid &amp; Flexible Pavement Design</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed pavement systems by evaluating traffic loading and material properties against performance requirements.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p17')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p18">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Road Superelevation Design</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed superelevation for horizontal curves for vehicle stability and driving comfort.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p18')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p19">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Vertical Alignment</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Developed vertical road alignments considering gradients, curves, drainage and safety.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p19')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p20">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Stopping Sight Distance</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Analysed sight-distance requirements for driver visibility and safe operation.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p20')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p21">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Signal &amp; Interlocking</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Studied railway signalling and interlocking for safe train movement and route control.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p21')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p22">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Railway Design</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed track alignment and components — sleepers, rails, ballast and formation — to geometric standards.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p22')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p23">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Runway Layout &amp; Length Design</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Studied runway layouts and designed runway length for efficient flight operations.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p23')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p24">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Payload &amp; Range</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Analysed the payload–range relationship to understand aircraft performance trade-offs.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p24')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p25">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Wind Rose Diagram</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Interpreted wind rose data to support runway orientation and airport planning.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p25')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p26">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Traffic Analysis</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Evaluated traffic flow characteristics to support transportation planning and design.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p26')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="pavement project-management">
+      <div class="card" data-cat="pavement project-management" data-pid="p27">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Design of ESAL</h3>
         <span class="meta" contenteditable="false">Transportation &amp; Pavement Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Estimated equivalent traffic loading to support pavement design and long-term performance.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p27')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="geotech estimation">
+      <div class="card" data-cat="geotech estimation" data-pid="p28">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Gravity Dam Design</h3>
         <span class="meta" contenteditable="false">Hydraulics &amp; Irrigation Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Evaluated structural stability, loading and hydraulic considerations against overturning, uplift and sliding.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p28')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="geotech estimation">
+      <div class="card" data-cat="geotech estimation" data-pid="p29">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Canal Design</h3>
         <span class="meta" contenteditable="false">Hydraulics &amp; Irrigation Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Developed canal designs by analysing hydraulic parameters, flow requirements and channel geometry.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p29')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="geotech estimation">
+      <div class="card" data-cat="geotech estimation" data-pid="p30">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Bligh's &amp; Lane's Creep Length Design</h3>
         <span class="meta" contenteditable="false">Hydraulics &amp; Irrigation Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Applied creep theories to analyse seepage beneath hydraulic structures and improve safety against piping and uplift.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p30')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="geotech estimation">
+      <div class="card" data-cat="geotech estimation" data-pid="p31">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Fall Design</h3>
         <span class="meta" contenteditable="false">Hydraulics &amp; Irrigation Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed a vertical canal (Sarda) fall to safely dissipate excess energy while minimising erosion.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p31')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="geotech estimation">
+      <div class="card" data-cat="geotech estimation" data-pid="p32">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Canal Outlet Design</h3>
         <span class="meta" contenteditable="false">Hydraulics &amp; Irrigation Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Designed outlets for controlled, equitable water distribution per irrigation requirements.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p32')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
         <button class="media-btn" onclick="openMediaModal(this,'link')">+ Link</button>
       </div>
 
-      <div class="card" data-cat="geotech estimation">
+      <div class="card" data-cat="geotech estimation" data-pid="p33">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
         <h3 contenteditable="false">Crop Water Requirements</h3>
         <span class="meta" contenteditable="false">Hydraulics &amp; Irrigation Engineering — coursework portfolio</span>
         <ul contenteditable="false"><li>Assessed crop water needs to support irrigation planning and water management.</li></ul>
+        
+        <button type="button" class="view-project-btn" onclick="openProjectDetail('p33')">View full project&nbsp;→</button>
         <div class="media-slot"></div>
         <button class="media-btn" onclick="openMediaModal(this,'image')">+ Photo</button>
         <button class="media-btn" onclick="openMediaModal(this,'video')">+ Video</button>
@@ -666,6 +778,25 @@
 
     </div>
     <button class="add-btn" onclick="addCard('projectsGrid', 'exp')">+ Add project</button>
+  </div>
+</section>
+
+<!-- ===================== PROJECT DETAIL ===================== -->
+<section id="project-detail" class="sheet" data-sheet="S-04b">
+  <div class="wrap">
+    <button type="button" class="btn ghost small-link back-link" onclick="backToProjects()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      Back to Projects
+    </button>
+    <div class="eyebrow" contenteditable="false">Project</div>
+    <div id="projectDetailBody"></div>
+
+    <div class="rule"></div>
+    <div id="similarProjectsSection">
+      <div class="eyebrow" contenteditable="false">Explore Similar Projects</div>
+      <h2 contenteditable="false">You might also like</h2>
+      <div class="top-projects-grid" id="similarProjectsGrid"></div>
+    </div>
   </div>
 </section>
 

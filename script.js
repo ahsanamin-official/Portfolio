@@ -121,6 +121,7 @@
   })();
 
   function setActive(id){
+    if(id !== 'project-detail') restoreDetailCard();
     const current = document.querySelector('.sheet.active');
     const sec = document.getElementById(id);
     const tabs = document.querySelectorAll('.sheet-tab[data-target="'+id+'"]');
@@ -133,7 +134,7 @@
       let inSidebar = false;
       tabs.forEach(t=>{
         t.classList.add('active');
-        if(t.closest('#moreSidebar')) inSidebar = true;
+        if(t.closest('#moreSidebar') || t.closest('#moreDropdownPanel')) inSidebar = true;
       });
       if(toggleBtn) toggleBtn.classList.toggle('has-active', inSidebar);
       window.scrollTo({top:0, behavior:'auto'});
@@ -163,6 +164,28 @@
   function toggleSidebar(){
     if(document.body.classList.contains('sidebar-open')) closeSidebar(); else openSidebar();
   }
+
+  /* ---------- MORE — HOVER DROPDOWN (desktop) ---------- */
+  function toggleMoreMenu(){
+    if(window.matchMedia('(max-width:640px)').matches){
+      openSidebar();
+      return;
+    }
+    document.getElementById('moreDropdownWrap').classList.toggle('dropdown-open');
+  }
+  function closeMoreMenu(){
+    const wrap = document.getElementById('moreDropdownWrap');
+    if(wrap) wrap.classList.remove('dropdown-open');
+  }
+  document.addEventListener('click', function(e){
+    const wrap = document.getElementById('moreDropdownWrap');
+    if(wrap && wrap.classList.contains('dropdown-open') && !wrap.contains(e.target)){
+      closeMoreMenu();
+    }
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') closeMoreMenu();
+  });
 
   const EDIT_PIN = '1544';
 
@@ -409,6 +432,70 @@
   })();
 
   /* ---------- PROJECT FILTERS ---------- */
+  /* ---------- PROJECT DETAIL PAGE ---------- */
+  let currentDetailPid = null;
+  let detailPlaceholder = null;
+
+  function restoreDetailCard(){
+    if(!currentDetailPid) return;
+    const holder = document.getElementById('projectDetailBody');
+    const card = holder ? holder.querySelector('.card[data-pid="'+currentDetailPid+'"]') : null;
+    if(card && detailPlaceholder && detailPlaceholder.parentNode){
+      detailPlaceholder.parentNode.replaceChild(card, detailPlaceholder);
+    }
+    currentDetailPid = null;
+    detailPlaceholder = null;
+  }
+
+  function openProjectDetail(pid){
+    const card = document.querySelector('#projectsGrid .card[data-pid="'+pid+'"]');
+    if(!card) return;
+    restoreDetailCard();
+    const holder = document.getElementById('projectDetailBody');
+    detailPlaceholder = document.createElement('div');
+    detailPlaceholder.setAttribute('data-pid-placeholder', pid);
+    detailPlaceholder.style.display = 'none';
+    card.parentNode.insertBefore(detailPlaceholder, card);
+    holder.innerHTML = '';
+    holder.appendChild(card);
+    currentDetailPid = pid;
+    buildSimilarProjects(pid, card.getAttribute('data-cat') || '');
+    setActive('project-detail');
+  }
+
+  function backToProjects(){
+    restoreDetailCard();
+    setActive('projects');
+  }
+
+  function buildSimilarProjects(pid, catStr){
+    const cats = catStr.split(' ').filter(Boolean);
+    const grid = document.getElementById('similarProjectsGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    const allCards = Array.from(document.querySelectorAll('#projectsGrid .card[data-pid], #projectDetailBody .card[data-pid]'));
+    const others = allCards.filter(c => c.getAttribute('data-pid') !== pid);
+    let matches = others.filter(c => (c.getAttribute('data-cat') || '').split(' ').some(cc => cats.includes(cc)));
+    if(matches.length === 0) matches = others;
+    matches = matches.slice(0, 4);
+    matches.forEach(c => {
+      const titleEl = c.querySelector('h3');
+      const metaEl = c.querySelector('.meta');
+      const imgEl = c.querySelector('.media-slot img');
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'project-tile';
+      if(imgEl && imgEl.src) tile.style.backgroundImage = "url('" + imgEl.src + "')";
+      const title = titleEl ? titleEl.textContent : 'Project';
+      const meta = metaEl ? metaEl.textContent : '';
+      tile.innerHTML = '<span class="pt-overlay"></span><span class="pt-text"><span class="pt-title">'+title+'</span><span class="pt-sub">'+meta+'</span></span>';
+      tile.onclick = function(){ openProjectDetail(c.getAttribute('data-pid')); };
+      grid.appendChild(tile);
+    });
+    const section = document.getElementById('similarProjectsSection');
+    if(section) section.style.display = matches.length ? '' : 'none';
+  }
+
   function setProjectFilter(cat, btn){
     document.querySelectorAll('#projectFilterBar .filter-chip').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
