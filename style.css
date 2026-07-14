@@ -141,13 +141,13 @@
   .nav-dropdown-wrap.dropdown-open .dd-chevron{transform:rotate(180deg);}
 
   #moreDropdownPanel{
-    position:absolute;top:100%;left:0;min-width:230px;
+    position:fixed;top:0;left:0;min-width:230px;
     background:var(--card);border:1px solid var(--line);
     border-top:3px solid var(--navy);
     box-shadow:0 16px 32px rgba(10,14,24,0.22);
     opacity:0;visibility:hidden;transform:translateY(-6px);
     transition:opacity .18s ease,transform .18s ease,visibility .18s ease;
-    z-index:60;padding:4px 0;
+    z-index:200;padding:4px 0;
   }
   @media (prefers-reduced-motion: reduce){#moreDropdownPanel{transition:none;}}
   @media (min-width:641px){
@@ -220,8 +220,16 @@
   }
 
   /* ---------- HERO PANELS (per-slide text content) ---------- */
-  .hero-panel{display:none;}
-  .hero-panel.active{display:block;animation:heroPanelIn .7s cubic-bezier(.2,.7,.3,1) both;}
+  .hero-panels{position:relative;display:grid;grid-template-columns:1fr;}
+  .hero-panel{
+    grid-area:1/1;display:block;visibility:hidden;opacity:0;pointer-events:none;
+    transform:translateY(14px);
+    transition:opacity .55s cubic-bezier(.2,.7,.3,1),transform .55s cubic-bezier(.2,.7,.3,1),visibility .55s;
+  }
+  .hero-panel.active{
+    visibility:visible;opacity:1;pointer-events:auto;transform:translateY(0);position:relative;z-index:1;
+  }
+  @media (prefers-reduced-motion: reduce){.hero-panel{transition:opacity .2s ease;transform:none;}}
   @keyframes heroPanelIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
   @media (prefers-reduced-motion: reduce){.hero-panel.active{animation:none;}}
 
