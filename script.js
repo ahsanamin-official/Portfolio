@@ -1,4 +1,5 @@
-document.getElementById('tbDate').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+  document.getElementById('tbDate').textContent = new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
+  document.getElementById('footerYear').textContent = new Date().getFullYear();
 
   /* ---------- SCROLL-REVEAL ANIMATIONS (home sections) ---------- */
   (function(){
@@ -17,6 +18,58 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
       });
     }, {threshold:0.2, rootMargin:'0px 0px -40px 0px'});
     blocks.forEach(b=>io.observe(b));
+  })();
+
+  /* ---------- SITE-WIDE SCROLL REVEAL (all text, stats, cards & blocks) ---------- */
+  (function(){
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const supportsIO = 'IntersectionObserver' in window;
+
+    let io = null;
+    if(!reduceMotion && supportsIO){
+      io = new IntersectionObserver((entries)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('in-view');
+            io.unobserve(entry.target);
+          }
+        });
+      }, {threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+    }
+
+    function markAndObserve(el){
+      if(!el || el.classList.contains('fx-reveal')) return;
+      el.classList.add('fx-reveal');
+      if(reduceMotion || !io){ el.classList.add('in-view'); return; }
+      io.observe(el);
+    }
+
+    function scan(root){
+      root = root || document;
+      // Hero content (Home page above-the-fold)
+      root.querySelectorAll('.hero-inner > *').forEach(markAndObserve);
+      // Top-level content blocks inside every section
+      root.querySelectorAll('.sheet .wrap > *').forEach(markAndObserve);
+      // Individual cards anywhere on the site
+      root.querySelectorAll('.card').forEach(markAndObserve);
+      // Individual stat tiles in "By The Numbers"
+      root.querySelectorAll('.stat-item').forEach(markAndObserve);
+    }
+
+    scan();
+
+    // Re-scan whenever new content is added (new cards, new tabs, imported site, GitHub sync, etc.)
+    const mo = new MutationObserver((mutations)=>{
+      mutations.forEach(m=>{
+        m.addedNodes.forEach(node=>{
+          if(node.nodeType !== 1) return;
+          scan(node.parentElement || document);
+        });
+      });
+    });
+    mo.observe(document.body, {childList:true, subtree:true});
+
+    window.__rescanReveal = scan;
   })();
 
   /* ---------- STAT COUNT-UP (home "By The Numbers") ---------- */
@@ -69,13 +122,19 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
   function setActive(id){
     const current = document.querySelector('.sheet.active');
     const sec = document.getElementById(id);
-    const tab = document.querySelector('.sheet-tab[data-target="'+id+'"]');
+    const tabs = document.querySelectorAll('.sheet-tab[data-target="'+id+'"]');
+    const toggleBtn = document.getElementById('sidebarToggleBtn');
 
     function activateNow(){
       document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('active'));
       document.querySelectorAll('.sheet-tab').forEach(t=>t.classList.remove('active'));
       sec.classList.add('active');
-      if(tab) tab.classList.add('active');
+      let inSidebar = false;
+      tabs.forEach(t=>{
+        t.classList.add('active');
+        if(t.closest('#moreSidebar')) inSidebar = true;
+      });
+      if(toggleBtn) toggleBtn.classList.toggle('has-active', inSidebar);
       window.scrollTo({top:0, behavior:'auto'});
       requestAnimationFrame(()=> sec.classList.add('sheet-in'));
     }
@@ -87,6 +146,21 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     } else {
       activateNow();
     }
+  }
+
+  /* ---------- SIDEBAR (secondary sections: Experience / Skills / Leadership) ---------- */
+  function openSidebar(){
+    document.body.classList.add('sidebar-open');
+    document.getElementById('moreSidebar').setAttribute('aria-hidden', 'false');
+    document.getElementById('sidebarToggleBtn').setAttribute('aria-expanded', 'true');
+  }
+  function closeSidebar(){
+    document.body.classList.remove('sidebar-open');
+    document.getElementById('moreSidebar').setAttribute('aria-hidden', 'true');
+    document.getElementById('sidebarToggleBtn').setAttribute('aria-expanded', 'false');
+  }
+  function toggleSidebar(){
+    if(document.body.classList.contains('sidebar-open')) closeSidebar(); else openSidebar();
   }
 
   const EDIT_PIN = '1544';
@@ -234,7 +308,12 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
       headers:{ 'Authorization':`Bearer ${ghToken}`, 'Accept':'application/vnd.github+json' }
     });
     if(res.status === 404) return null;
-    if(!res.ok) throw new Error('Could not read current file (' + res.status + ')');
+    if(!res.ok){
+      const errText = await res.text();
+      let ghMsg = '';
+      try{ ghMsg = JSON.parse(errText).message || ''; }catch(e){ ghMsg = errText; }
+      throw new Error('Could not read current file (' + res.status + (ghMsg ? ': ' + ghMsg : '') + ')');
+    }
     const data = await res.json();
     return data.sha;
   }
@@ -283,12 +362,14 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
       });
       if(!res.ok){
         const errText = await res.text();
-        throw new Error(res.status + ': ' + errText);
+        let ghMsg = '';
+        try{ ghMsg = JSON.parse(errText).message || ''; }catch(e){ ghMsg = errText; }
+        throw new Error(res.status + (ghMsg ? ': ' + ghMsg : ''));
       }
       setGhStatus('Saved to GitHub ✓ ' + new Date().toLocaleTimeString(), 'connected');
     }catch(err){
       console.error(err);
-      setGhStatus('Save failed — check token/repo/branch settings.', 'error');
+      setGhStatus('Save failed — ' + (err && err.message ? err.message : 'check token/repo/branch settings.'), 'error');
     }finally{
       ghSaving = false;
     }
@@ -393,6 +474,21 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     });
   }
 
+  function positionSearchResults(){
+    const wrap = document.getElementById('siteSearchWrap');
+    const box = document.getElementById('siteSearchResults');
+    if(!wrap || !box) return;
+    const rect = wrap.getBoundingClientRect();
+    const width = Math.max(rect.width, 260);
+    let left = rect.left;
+    if(left + width > window.innerWidth - 12) left = window.innerWidth - width - 12;
+    if(left < 12) left = 12;
+    box.style.left = left + 'px';
+    box.style.top = (rect.bottom + 6) + 'px';
+    box.style.width = width + 'px';
+  }
+  window.addEventListener('resize', positionSearchResults);
+
   function runSiteSearch(query){
     const box = document.getElementById('siteSearchResults');
     const trimmed = query.trim();
@@ -433,6 +529,7 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
         });
       });
     }
+    positionSearchResults();
     box.classList.add('show');
   }
 
@@ -742,7 +839,8 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     function anyModalOpen(){
       return document.getElementById('pinModal').style.display === 'flex'
         || document.getElementById('mediaModal').style.display === 'flex'
-        || document.getElementById('lightbox').style.display === 'flex';
+        || document.getElementById('lightbox').style.display === 'flex'
+        || document.body.classList.contains('sidebar-open');
     }
 
     document.addEventListener('keydown', function(e){
@@ -753,6 +851,7 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
         if(document.getElementById('pinModal').style.display === 'flex'){ closePinModal(); return; }
         if(document.getElementById('mediaModal').style.display === 'flex'){ closeMediaModal(); return; }
         if(document.getElementById('lightbox').style.display === 'flex'){ closeLightbox(); return; }
+        if(document.body.classList.contains('sidebar-open')){ closeSidebar(); return; }
         const results = document.getElementById('siteSearchResults');
         if(results.classList.contains('show')){ results.classList.remove('show'); return; }
         const search = document.getElementById('siteSearchInput');
@@ -815,14 +914,14 @@ document.getElementById('tbDate').textContent = new Date().toLocaleDateString('e
     btn.className = 'sheet-tab';
     btn.setAttribute('data-target', id);
     btn.onclick = function(){ setActive(id); };
-    btn.innerHTML = '<span class="label">'+name+'</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span>';
+    btn.innerHTML = '<span class="label" contenteditable="false">'+name+'</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span>';
     document.getElementById('navInner').appendChild(btn);
 
     const sec = document.createElement('section');
     sec.className = 'sheet';
     sec.id = id;
     sec.setAttribute('data-sheet', sheetNo);
-    sec.innerHTML = '<div class="wrap"><div class="eyebrow">Custom Page</div><h2 contenteditable="true">'+name+'</h2><div class="card"><button class="del-btn" onclick="this.closest(\'.card\').remove()">✕</button><p contenteditable="true">Click to add your content here…</p><div class="media-slot"></div><button class="media-btn" onclick="openMediaModal(this,\'image\')">+ Photo</button><button class="media-btn" onclick="openMediaModal(this,\'video\')">+ Video</button><button class="media-btn" onclick="openMediaModal(this,\'link\')">+ Link</button></div><button class="add-btn" onclick="addCard(\''+id+'-wrap\', \'exp\')">+ Add card</button></div>';
+    sec.innerHTML = '<div class="wrap"><div class="eyebrow" contenteditable="true">Custom Page</div><h2 contenteditable="true">'+name+'</h2><div class="card"><button class="del-btn" onclick="this.closest(\'.card\').remove()">✕</button><p contenteditable="true">Click to add your content here…</p><div class="media-slot"></div><button class="media-btn" onclick="openMediaModal(this,\'image\')">+ Photo</button><button class="media-btn" onclick="openMediaModal(this,\'video\')">+ Video</button><button class="media-btn" onclick="openMediaModal(this,\'link\')">+ Link</button></div><button class="add-btn" onclick="addCard(\''+id+'-wrap\', \'exp\')">+ Add card</button></div>';
     document.getElementById('contact').insertAdjacentElement('beforebegin', sec);
     setActive(id);
   }
