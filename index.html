@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Muhammad Ahsan Amin — Civil &amp; Structural Engineer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
-<body class="edit-mode">
+<body>
 
 <!-- ===================== SHEET NAV ===================== -->
 <nav id="sheetNav">
+  <div id="navBrand" contenteditable="false">Ahsan Amin</div>
   <div class="navInner" id="navInner">
-    <button class="sheet-tab active" data-target="home" onclick="setActive('home')"><span class="label">Home</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="about" onclick="setActive('about')"><span class="label">About</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="experience" onclick="setActive('experience')"><span class="label">Experience</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="projects" onclick="setActive('projects')"><span class="label">Projects</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="skills" onclick="setActive('skills')"><span class="label">Skills</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="leadership" onclick="setActive('leadership')"><span class="label">Leadership</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="contact" onclick="setActive('contact')"><span class="label">Contact</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab active" data-target="home" onclick="setActive('home')"><span class="label" contenteditable="false">Home</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab" data-target="projects" onclick="setActive('projects')"><span class="label" contenteditable="false">Projects</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab" data-target="about" onclick="setActive('about')"><span class="label" contenteditable="false">About</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab" data-target="contact" onclick="setActive('contact')"><span class="label" contenteditable="false">Contact Us</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
   </div>
+  <button id="sidebarToggleBtn" onclick="openSidebar()" aria-label="Open more sections" aria-expanded="false" aria-controls="moreSidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    <span>More</span>
+  </button>
   <div id="siteSearchWrap">
     <input type="text" id="siteSearchInput" placeholder="Search site…" oninput="runSiteSearch(this.value)" onfocus="runSiteSearch(this.value)">
     <div id="siteSearchResults"></div>
@@ -27,29 +30,44 @@
   <button id="addTabBtn" onclick="addTab()">+ Add page</button>
 </nav>
 
+<!-- ===================== SIDEBAR (secondary sections) ===================== -->
+<div id="sidebarOverlay" onclick="closeSidebar()"></div>
+<aside id="moreSidebar" aria-hidden="true">
+  <div id="sidebarHead">
+    <span class="mono">MORE SECTIONS</span>
+    <button id="sidebarCloseBtn" onclick="closeSidebar()" aria-label="Close menu">✕</button>
+  </div>
+  <div class="navInner" id="sidebarInner">
+    <button class="sheet-tab" data-target="experience" onclick="setActive('experience');closeSidebar();"><span class="label" contenteditable="false">Experience</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab" data-target="skills" onclick="setActive('skills');closeSidebar();"><span class="label" contenteditable="false">Skills</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab" data-target="leadership" onclick="setActive('leadership');closeSidebar();"><span class="label" contenteditable="false">Leadership</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+  </div>
+  <button id="addTabBtnSidebar" onclick="addTab()">+ Add page</button>
+</aside>
+
 <!-- ===================== HOME ===================== -->
 <section id="home" class="sheet active" data-sheet="S-01">
   <div class="hero-visual">
     <div class="grid-bg"></div>
     <div class="wrap hero-inner">
-      <div class="eyebrow mono">Portfolio</div>
+      <div class="eyebrow mono" contenteditable="false">Portfolio</div>
       <h1 contenteditable="false" id="heroName">Muhammad Ahsan Amin</h1>
-      <div class="role" contenteditable="false">Civil &amp; Structural Engineering — Fresh Graduate, UET Lahore</div>
+      <div class="role" contenteditable="false">Civil &amp; Structural Engineering — Fresh Graduate (July), UET Lahore</div>
       <p class="lede" contenteditable="false">Fresh Graduate (July) in Civil Engineering focused on structural analysis and design, infrastructure planning, and non-destructive testing methods — seeking to translate technical training into sustainable, socially impactful engineering work.</p>
       <div class="hero-cta">
         <a class="btn" href="mailto:ahsanamin798@gmail.com">Email Me</a>
         <a class="btn ghost" href="https://www.linkedin.com/in/ahsanaminofficial" target="_blank" rel="noopener">LinkedIn ↗</a>
       </div>
       <div class="title-block">
-        <div class="tb-title">Muhammad Ahsan Amin — Career Fair Portfolio</div>
-        <div class="tb-cell"><b>Name</b>M. Ahsan Amin</div>
-        <div class="tb-cell"><b>Date</b><span id="tbDate">14 Jul 2026</span></div>
-        <div class="tb-cell"><b>Role</b>Civil Engineer</div>
-        <div class="tb-cell"><b>Location</b>Lahore, PK</div>
+        <div class="tb-title" contenteditable="false">Muhammad Ahsan Amin — Career Fair Portfolio</div>
+        <div class="tb-cell" contenteditable="false"><b>Name</b>M. Ahsan Amin</div>
+        <div class="tb-cell" contenteditable="false"><b>Date</b><span id="tbDate"></span></div>
+        <div class="tb-cell" contenteditable="false"><b>Role</b>Civil Engineer</div>
+        <div class="tb-cell" contenteditable="false"><b>Location</b>Lahore, PK</div>
       </div>
       <button type="button" class="home-scroll-cue" onclick="document.getElementById('homeMore').scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'})" aria-label="Scroll to learn more">
         Scroll to explore
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"></path></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </button>
     </div>
   </div>
@@ -58,49 +76,49 @@
     <div class="wrap">
 
       <div class="stats-band">
-        <div class="eyebrow">By The Numbers</div>
+        <div class="eyebrow" contenteditable="false">By The Numbers</div>
         <div class="stats-grid" id="statsGrid">
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="2">2</span><sup>x</sup></div>
-            <div class="stat-cap">Class Topper</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="2">0</span><sup>x</sup></div>
+            <div class="stat-cap" contenteditable="false">Class Topper</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="8">8</span><sup>+</sup></div>
-            <div class="stat-cap">Academic Projects</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="8">0</span><sup>+</sup></div>
+            <div class="stat-cap" contenteditable="false">Academic Projects</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="2">2</span><sup>+</sup></div>
-            <div class="stat-cap">Field Projects</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="2">0</span><sup>+</sup></div>
+            <div class="stat-cap" contenteditable="false">Field Projects</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="5">5</span><sup>+</sup></div>
-            <div class="stat-cap">Site Visits</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="5">0</span><sup>+</sup></div>
+            <div class="stat-cap" contenteditable="false">Site Visits</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="5">5</span><sup>+</sup></div>
-            <div class="stat-cap">Departmental Booklets Designed</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="5">0</span><sup>+</sup></div>
+            <div class="stat-cap" contenteditable="false">Departmental Booklets Designed</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="2">2</span><sup>+</sup></div>
-            <div class="stat-cap">3-Min Video Presentations Won</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="2">0</span><sup>+</sup></div>
+            <div class="stat-cap" contenteditable="false">3-Min Video Presentations Won</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="5">5</span><sup>+</sup></div>
-            <div class="stat-cap">Academic Video Presentations Produced</div>
+            <div class="stat-num mono"><span class="stat-count" data-target="5">0</span><sup>+</sup></div>
+            <div class="stat-cap" contenteditable="false">Academic Video Presentations Produced</div>
           </div>
         </div>
       </div>
 
       <div class="reveal-row">
         <div class="reveal-grid">
-          <div class="reveal-num mono">01 / 04</div>
-          <div class="reveal-block in-view">
-            <div class="eyebrow">Who I Am</div>
-            <h2>My bio &amp; background</h2>
+          <div class="reveal-num mono" contenteditable="false">01 / 04</div>
+          <div class="reveal-block">
+            <div class="eyebrow" contenteditable="false">Who I Am</div>
+            <h2 contenteditable="false">My bio &amp; background</h2>
             <p>A Civil &amp; Structural Engineering graduate from UET Lahore, shaped by on-site experience, a research mindset, and a steady interest in how structures actually get built — not just how they're calculated. I bring a disciplined, detail-first approach to every project I take on.</p>
             <a class="btn small-link" href="#about" onclick="event.preventDefault(); setActive('about');">
               Read my full bio
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
         </div>
@@ -108,14 +126,14 @@
 
       <div class="reveal-row">
         <div class="reveal-grid">
-          <div class="reveal-num mono">02 / 04</div>
-          <div class="reveal-block in-view">
-            <div class="eyebrow">What I Do</div>
-            <h2>Expertise &amp; core competencies</h2>
+          <div class="reveal-num mono" contenteditable="false">02 / 04</div>
+          <div class="reveal-block">
+            <div class="eyebrow" contenteditable="false">What I Do</div>
+            <h2 contenteditable="false">Expertise &amp; core competencies</h2>
             <p>Structural analysis and design, infrastructure planning, geotechnical fundamentals, and non-destructive testing methods — backed by hands-on coursework and a working knowledge of the software and standards used on real sites.</p>
             <a class="btn small-link" href="#skills" onclick="event.preventDefault(); setActive('skills');">
               See my skills
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
         </div>
@@ -123,14 +141,14 @@
 
       <div class="reveal-row">
         <div class="reveal-grid">
-          <div class="reveal-num mono">03 / 04</div>
-          <div class="reveal-block in-view">
-            <div class="eyebrow">My Work</div>
-            <h2>Projects &amp; site experience</h2>
+          <div class="reveal-num mono" contenteditable="false">03 / 04</div>
+          <div class="reveal-block">
+            <div class="eyebrow" contenteditable="false">My Work</div>
+            <h2 contenteditable="false">Projects &amp; site experience</h2>
             <p>From site visits to design coursework and research, here's a closer look at what I've built, analyzed, and contributed to so far.</p>
             <a class="btn small-link" href="#projects" onclick="event.preventDefault(); setActive('projects');">
               View my projects
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
         </div>
@@ -138,14 +156,14 @@
 
       <div class="reveal-row">
         <div class="reveal-grid">
-          <div class="reveal-num mono">04 / 04</div>
-          <div class="reveal-block in-view">
-            <div class="eyebrow">Say Hello</div>
-            <h2>Let's get in touch</h2>
+          <div class="reveal-num mono" contenteditable="false">04 / 04</div>
+          <div class="reveal-block">
+            <div class="eyebrow" contenteditable="false">Say Hello</div>
+            <h2 contenteditable="false">Let's get in touch</h2>
             <p>Open to graduate roles, internships, and conversations about structural and infrastructure engineering. I'm quick to respond and always happy to talk shop.</p>
             <a class="btn small-link" href="#contact" onclick="event.preventDefault(); setActive('contact');">
               Get in touch
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </a>
           </div>
         </div>
@@ -158,12 +176,12 @@
 <!-- ===================== ABOUT ===================== -->
 <section id="about" class="sheet" data-sheet="S-02">
   <div class="wrap">
-    <div class="eyebrow">About</div>
+    <div class="eyebrow" contenteditable="false">About</div>
     <h2 contenteditable="false">Profile</h2>
     <p contenteditable="false">I am a focused, energetic and dedicated Fresh Graduate (July) in Civil Engineering committed to advancing infrastructure planning, structural integrity monitoring, and sustainable development. I seek a professional environment to strengthen my technical expertise and translate it into green and socially impactful engineering solutions.</p>
 
     <div class="rule"></div>
-    <div class="eyebrow">Education</div>
+    <div class="eyebrow" contenteditable="false">Education</div>
     <div class="card" id="eduCard">
       <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
       <h3 contenteditable="false">BSc Civil Engineering</h3>
@@ -181,7 +199,7 @@
 <!-- ===================== EXPERIENCE ===================== -->
 <section id="experience" class="sheet" data-sheet="S-03">
   <div class="wrap">
-    <div class="eyebrow">Work Experience</div>
+    <div class="eyebrow" contenteditable="false">Work Experience</div>
     <h2 contenteditable="false">On-site and research experience</h2>
 
     <div class="card">
@@ -234,7 +252,7 @@
 <!-- ===================== PROJECTS ===================== -->
 <section id="projects" class="sheet" data-sheet="S-04">
   <div class="wrap">
-    <div class="eyebrow">Projects</div>
+    <div class="eyebrow" contenteditable="false">Projects</div>
     <h2 contenteditable="false">Selected coursework &amp; independent work</h2>
     <div class="filter-bar" id="projectFilterBar">
       <button class="filter-chip active" data-filter="all" onclick="setProjectFilter('all',this)">All</button>
@@ -619,24 +637,24 @@
 <!-- ===================== SKILLS ===================== -->
 <section id="skills" class="sheet" data-sheet="S-05">
   <div class="wrap">
-    <div class="eyebrow">Skills</div>
+    <div class="eyebrow" contenteditable="false">Skills</div>
     <h2 contenteditable="false">Technical range</h2>
     <div class="grid-2">
       <div class="skills-col card">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
-        <h4>Academic &amp; Technical</h4>
+        <h4 contenteditable="false">Academic &amp; Technical</h4>
         <p contenteditable="false">Design of RCC frame structures, foundations, connections and joints. Static and dynamic structural behaviour assessment. Analysis and design of steel buildings, sheds, trusses, beams and plate girders. Design of water tanks and steel members.</p>
       </div>
       <div class="skills-col card">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
-        <h4>Software &amp; Computational</h4>
+        <h4 contenteditable="false">Software &amp; Computational</h4>
         <div contenteditable="false">
-          <span class="chip">ETABS</span><span class="chip">SAP2000</span><span class="chip">SAFE</span><span class="chip">STAAD Pro &amp; Foundation</span><span class="chip">IDEA StatiCa</span><span class="chip">Python</span><span class="chip">MATLAB</span><span class="chip">Revit</span><span class="chip">AutoCAD</span><span class="chip">MS Project</span><span class="chip">Excel</span>
+          <span class="chip" contenteditable="false">ETABS</span><span class="chip" contenteditable="false">SAP2000</span><span class="chip" contenteditable="false">SAFE</span><span class="chip" contenteditable="false">STAAD Pro &amp; Foundation</span><span class="chip" contenteditable="false">IDEA StatiCa</span><span class="chip" contenteditable="false">Python</span><span class="chip" contenteditable="false">MATLAB</span><span class="chip" contenteditable="false">Revit</span><span class="chip" contenteditable="false">AutoCAD</span><span class="chip" contenteditable="false">MS Project</span><span class="chip" contenteditable="false">Excel</span>
         </div>
       </div>
       <div class="skills-col card">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
-        <h4>Soft &amp; Interpersonal</h4>
+        <h4 contenteditable="false">Soft &amp; Interpersonal</h4>
         <p contenteditable="false">Technical report writing and professional documentation. Active listening and emotional intelligence. Adaptability across diverse cultural environments.</p>
       </div>
     </div>
@@ -647,7 +665,7 @@
 <!-- ===================== LEADERSHIP ===================== -->
 <section id="leadership" class="sheet" data-sheet="S-06">
   <div class="wrap">
-    <div class="eyebrow">Leadership &amp; Extracurricular</div>
+    <div class="eyebrow" contenteditable="false">Leadership &amp; Extracurricular</div>
     <h2 contenteditable="false">Leadership, management &amp; design work</h2>
 
     <div class="card">
@@ -691,7 +709,7 @@
 <!-- ===================== CONTACT ===================== -->
 <footer id="contact" class="sheet" data-sheet="S-07">
   <div class="wrap" style="padding:72px 28px 60px;">
-    <div class="eyebrow" style="color:#8FB0DD;">Contact</div>
+    <div class="eyebrow" style="color:#8FB0DD;" contenteditable="false">Contact</div>
     <h2 contenteditable="false" style="color:#fff;">Let's talk about a role, internship or project.</h2>
     <p contenteditable="false" style="color:#D7DEEA;max-width:52ch;">Open to structural design, geotechnical and site-engineering roles. Based in Lahore, Pakistan — available to relocate.</p>
     <div style="margin-top:18px;" contenteditable="false">
@@ -700,13 +718,13 @@
       <a class="chip" href="https://www.linkedin.com/in/ahsanaminofficial" target="_blank" rel="noopener">in/ahsanaminofficial ↗</a>
     </div>
     <div class="rule" style="background:rgba(255,255,255,0.15);"></div>
-    <div class="eyebrow" style="color:#8FB0DD;">Get in Touch</div>
+    <div class="eyebrow" style="color:#8FB0DD;" contenteditable="false">Get in Touch</div>
     <div class="contact-form-wrap">
       <form id="contactForm" onsubmit="return sendContactForm(event)">
         <div class="cf-row">
           <div class="cf-field">
             <label for="cfName">Your Name*</label>
-            <input type="text" id="cfName" required="" placeholder="Jane Doe">
+            <input type="text" id="cfName" required placeholder="Jane Doe">
           </div>
           <div class="cf-field">
             <label for="cfOrg">Organisation</label>
@@ -716,7 +734,7 @@
         <div class="cf-row">
           <div class="cf-field">
             <label for="cfEmail">Email*</label>
-            <input type="email" id="cfEmail" required="" placeholder="jane@example.com">
+            <input type="email" id="cfEmail" required placeholder="jane@example.com">
           </div>
         </div>
         <div class="cf-row">
@@ -730,15 +748,57 @@
       </form>
     </div>
     <div class="title-block" style="margin-top:44px;">
-      <div class="tb-title">Thank you for visiting</div>
-      <div class="tb-cell"><b>Location</b>Kot Radha Kishan, PK</div>
-      <div class="tb-cell"><b>Status</b>Fresh Graduate (July)</div>
+      <div class="tb-title" contenteditable="false">Thank you for visiting</div>
+      <div class="tb-cell" contenteditable="false"><b>Location</b>Kot Radha Kishan, PK</div>
+      <div class="tb-cell" contenteditable="false"><b>Status</b>Fresh Graduate (July)</div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== GLOBAL SITE FOOTER (always visible, not a "sheet") ===================== -->
+<footer id="siteFooter">
+  <div class="wrap footer-cols">
+    <div class="footer-col">
+      <h4>Home</h4>
+      <a href="#" onclick="event.preventDefault(); setActive('home');">Home</a>
+      <a href="#" onclick="event.preventDefault(); setActive('about');">About Me</a>
+    </div>
+    <div class="footer-col">
+      <h4>Work</h4>
+      <a href="#" onclick="event.preventDefault(); setActive('experience');">Experience</a>
+      <a href="#" onclick="event.preventDefault(); setActive('projects');">Projects</a>
+    </div>
+    <div class="footer-col">
+      <h4>More</h4>
+      <a href="#" onclick="event.preventDefault(); setActive('skills');">Skills</a>
+      <a href="#" onclick="event.preventDefault(); setActive('leadership');">Leadership</a>
+    </div>
+    <div class="footer-col">
+      <h4>Contact Us</h4>
+      <a href="mailto:ahsanamin798@gmail.com">ahsanamin798@gmail.com</a>
+      <a href="tel:+923094596732">+92 309 4596732</a>
+      <div class="footer-socials">
+        <a href="https://www.linkedin.com/in/ahsanaminofficial" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.25h4.5V23H.24V8.25zm7.44 0h4.31v2.02h.06c.6-1.13 2.07-2.33 4.26-2.33 4.55 0 5.39 3 5.39 6.9V23h-4.5v-6.85c0-1.63-.03-3.73-2.28-3.73-2.28 0-2.63 1.78-2.63 3.62V23h-4.5V8.25z"/></svg>
+        </a>
+        <a href="mailto:ahsanamin798@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 4 8 8 8-8"/></svg>
+        </a>
+        <a href="tel:+923094596732" aria-label="Phone">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M6.6 10.8c1.4 2.7 3.6 4.9 6.3 6.3l2.1-2.1c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.5c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="wrap footer-bottom-inner">
+      Copyright © <span id="footerYear"></span>. <b>Muhammad Ahsan Amin</b>. All Rights Reserved.
     </div>
   </div>
 </footer>
 
 <!-- ===================== EDIT MODE UI ===================== -->
-<button id="editToggle" onclick="requestEditMode()">✓ Done Editing</button>
+<button id="editToggle" onclick="requestEditMode()">✎ Edit Site</button>
 <div id="editPanel">
   <div id="editPanelHandle"><span class="grip">⠿ Drag panel</span><span class="resetPos" onclick="resetEditPanelPos(event)" title="Reset to default position">↺ reset</span></div>
   <h5>Theme colours</h5>
@@ -755,7 +815,7 @@
   </div>
   <div id="githubSyncRow">
     <h5>GitHub sync</h5>
-    <div id="ghStatus" class="gh-status saving">Saving to GitHub…</div>
+    <div id="ghStatus" class="gh-status">Not connected</div>
     <label class="gh-label">Repo owner</label>
     <input type="text" id="ghOwner" placeholder="e.g. ahsan-amin">
     <label class="gh-label">Repo name</label>
@@ -776,7 +836,7 @@
       <button id="ghConnectBtn" onclick="connectGitHub()">🔗 Connect</button>
       <button onclick="disconnectGitHub()">Disconnect</button>
     </div>
-    <label class="gh-check-row"><input type="checkbox" id="ghAutoSaveToggle" checked="" onchange="ghAutoSave=this.checked"> Auto-save every change to GitHub</label>
+    <label class="gh-check-row"><input type="checkbox" id="ghAutoSaveToggle" checked onchange="ghAutoSave=this.checked"> Auto-save every change to GitHub</label>
     <button class="primary" onclick="pushToGitHub('Manual save from site editor')">⬆ Save now to GitHub</button>
     <div class="hint">Create a fine-grained personal access token scoped ONLY to this repository with "Contents: Read and write" permission — nothing else. The token is kept in this browser tab's session only (never saved to disk), and is cleared when you close the tab or click Disconnect. Anyone who has this PIN and access to your unlocked browser tab could read the token while it's connected, so don't leave a connected session unattended, and rotate/revoke the token periodically from GitHub's settings.</div>
   </div>
@@ -788,11 +848,11 @@
   <div class="hint">Click any text to edit it — a formatting toolbar (bold, italic, bullets, alignment, font, size) appears above your cursor and stays put until you click well away from it. Use the dashed “+” buttons to add cards, and the “Photo / Video / Link” buttons to open the media picker — upload files directly or paste a URL (YouTube/Vimeo links auto-embed). Photos open full-size on click. Export (.html) downloads a working copy of the whole site — upload it to free static hosting (Netlify Drop, GitHub Pages or Vercel) to publish it. Export (PDF) turns every page into a shareable, print-ready PDF — handy for attaching to emails or LinkedIn, just like downloading a LinkedIn profile. Connect GitHub sync above to have edits — projects, text, fonts, theme colours, background — committed straight to your repo automatically. Drag this panel by its top bar to move it out of the way.</div>
 </div>
 
-<div id="richToolbar" class="" style="top: 114.522px; left: 133.507px;">
+<div id="richToolbar">
   <div class="rt-row">
-    <select id="rtFontName" title="Font" onmousedown="event.stopPropagation()" onchange="applyFontName(this.value)"><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option><option value="Space Grotesk" style="font-family: &quot;Space Grotesk&quot;;">Space Grotesk</option><option value="IBM Plex Sans" style="font-family: &quot;IBM Plex Sans&quot;;">IBM Plex Sans</option><option value="IBM Plex Mono" style="font-family: &quot;IBM Plex Mono&quot;;">IBM Plex Mono</option><option value="Arial" style="font-family: Arial;">Arial</option><option value="Helvetica" style="font-family: Helvetica;">Helvetica</option><option value="Verdana" style="font-family: Verdana;">Verdana</option><option value="Tahoma" style="font-family: Tahoma;">Tahoma</option><option value="Trebuchet MS" style="font-family: &quot;Trebuchet MS&quot;;">Trebuchet MS</option><option value="Segoe UI" style="font-family: &quot;Segoe UI&quot;;">Segoe UI</option><option value="Calibri" style="font-family: Calibri;">Calibri</option><option value="Georgia" style="font-family: Georgia;">Georgia</option><option value="Garamond" style="font-family: Garamond;">Garamond</option><option value="Times New Roman" style="font-family: &quot;Times New Roman&quot;;">Times New Roman</option><option value="Cambria" style="font-family: Cambria;">Cambria</option><option value="Courier New" style="font-family: &quot;Courier New&quot;;">Courier New</option><option value="Consolas" style="font-family: Consolas;">Consolas</option><option value="Roboto" style="font-family: Roboto;">Roboto</option><option value="Noto Sans" style="font-family: &quot;Noto Sans&quot;;">Noto Sans</option><option value="Impact" style="font-family: Impact;">Impact</option><option value="Comic Sans MS" style="font-family: &quot;Comic Sans MS&quot;;">Comic Sans MS</option></select>
+    <select id="rtFontName" title="Font" onmousedown="event.stopPropagation()" onchange="applyFontName(this.value)"></select>
     <select id="rtFontSize" title="Font size" onmousedown="event.stopPropagation()" onchange="applyFontSize(this.value)">
-      <option value="10">10</option><option value="12">12</option><option value="14" selected="">14</option>
+      <option value="10">10</option><option value="12">12</option><option value="14" selected>14</option>
       <option value="16">16</option><option value="18">18</option><option value="20">20</option>
       <option value="24">24</option><option value="28">28</option><option value="32">32</option>
       <option value="40">40</option><option value="48">48</option><option value="64">64</option>
@@ -865,12 +925,13 @@
 <div id="lightbox" onclick="closeLightbox()"><img id="lightboxImg" src="" alt=""></div>
 
 <!-- ===================== PIN MODAL (EDIT MODE LOCK) ===================== -->
-<div id="pinModal" style="display: none;" class="shake">
+<div id="pinModal">
   <div class="modal-card">
     <div class="modal-head"><span class="mono">ENTER PIN TO EDIT</span><button onclick="closePinModal()">✕</button></div>
     <div class="modal-body">
       <div class="pin-hint">This site is locked — enter the 4-digit code to enable editing.</div>
-      <input type="password" id="pinInput" inputmode="numeric" maxlength="4" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();submitPin();}">
+      <input type="password" id="pinInput" inputmode="numeric" maxlength="4" autocomplete="off"
+        onkeydown="if(event.key==='Enter'){event.preventDefault();submitPin();}">
       <div id="pinError"></div>
       <div class="modal-actions">
         <button class="cancel" onclick="closePinModal()">Cancel</button>
@@ -884,13 +945,12 @@
   <kbd>/</kbd> search &nbsp; <kbd>←</kbd><kbd>→</kbd> pages &nbsp; <kbd>Esc</kbd> close
 </div>
 
-<button id="backToTop" onclick="scrollToTop()" aria-label="Back to top" class="">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>
+<button id="backToTop" onclick="scrollToTop()" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="script.js"></script>
-
-
-</body></html>
+</body>
+</html>
