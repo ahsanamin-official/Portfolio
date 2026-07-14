@@ -46,8 +46,9 @@
 
     function scan(root){
       root = root || document;
-      // Hero content (Home page above-the-fold)
-      root.querySelectorAll('.hero-inner > *').forEach(markAndObserve);
+      // Hero content (Home page above-the-fold) — hero-panel handles its own
+      // enter animation when the slider switches, so it's excluded here.
+      root.querySelectorAll('.hero-inner > *:not(.hero-panel)').forEach(markAndObserve);
       // Top-level content blocks inside every section
       root.querySelectorAll('.sheet .wrap > *').forEach(markAndObserve);
       // Individual cards anywhere on the site
@@ -1124,3 +1125,62 @@
   } else {
     loadGhConfig();
   }
+
+  /* ---------- HOME HERO SLIDER (Welcome / Who I Am / What I Do) ---------- */
+  (function(){
+    const visual = document.getElementById('heroVisual');
+    if(!visual) return;
+
+    const slides = Array.from(visual.querySelectorAll('.hero-slide'));
+    const panels = Array.from(visual.querySelectorAll('.hero-panel'));
+    const dots   = Array.from(visual.querySelectorAll('.hero-dot'));
+    const total  = slides.length;
+    if(!total) return;
+
+    const AUTOPLAY_MS = 5000;
+    let current = 0;
+    let timer = null;
+
+    function goTo(index){
+      index = ((index % total) + total) % total; // wrap both directions
+      if(index === current) return;
+      slides[current] && slides[current].classList.remove('active');
+      panels[current] && panels[current].classList.remove('active');
+      dots[current] && (dots[current].classList.remove('active'), dots[current].setAttribute('aria-selected','false'));
+
+      current = index;
+
+      slides[current] && slides[current].classList.add('active');
+      panels[current] && panels[current].classList.add('active');
+      dots[current] && (dots[current].classList.add('active'), dots[current].setAttribute('aria-selected','true'));
+    }
+
+    function next(){ goTo(current + 1); }
+
+    function startAutoplay(){
+      stopAutoplay();
+      timer = setInterval(next, AUTOPLAY_MS);
+    }
+    function stopAutoplay(){
+      if(timer){ clearInterval(timer); timer = null; }
+    }
+    function restartAutoplay(){ startAutoplay(); }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => { goTo(i); restartAutoplay(); });
+    });
+
+    // Pause while the user is interacting with this slide, resume after.
+    visual.addEventListener('mouseenter', stopAutoplay);
+    visual.addEventListener('mouseleave', startAutoplay);
+    visual.addEventListener('focusin', stopAutoplay);
+    visual.addEventListener('focusout', startAutoplay);
+
+    // Don't burn through slides while the tab is in the background.
+    document.addEventListener('visibilitychange', () => {
+      if(document.hidden) stopAutoplay();
+      else startAutoplay();
+    });
+
+    startAutoplay();
+  })();

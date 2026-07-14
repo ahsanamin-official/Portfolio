@@ -12,7 +12,7 @@
 
 <!-- ===================== SHEET NAV ===================== -->
 <nav id="sheetNav">
-  <div id="navBrand" contenteditable="false">Ahsan Amin</div>
+  <div id="navBrand" contenteditable="false">PORTFOLIO</div>
   <div class="navInner" id="navInner">
     <button class="sheet-tab active" data-target="home" onclick="setActive('home')"><span class="label" contenteditable="false">Home</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="projects" onclick="setActive('projects')"><span class="label" contenteditable="false">Projects</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
@@ -24,7 +24,7 @@
     <span>More</span>
   </button>
   <div id="siteSearchWrap">
-    <input type="text" id="siteSearchInput" placeholder="Search site…" oninput="runSiteSearch(this.value)" onfocus="runSiteSearch(this.value)">
+    <input type="text" id="siteSearchInput" placeholder="Search here…" oninput="runSiteSearch(this.value)" onfocus="runSiteSearch(this.value)">
     <div id="siteSearchResults"></div>
   </div>
   <button id="addTabBtn" onclick="addTab()">+ Add page</button>
@@ -47,28 +47,63 @@
 
 <!-- ===================== HOME ===================== -->
 <section id="home" class="sheet active" data-sheet="S-01">
-  <div class="hero-visual">
+  <div class="hero-visual" id="heroVisual">
+    <div class="hero-slides" id="heroSlides" aria-hidden="true">
+      <div class="hero-slide active" data-slide="0" style="background-image:url('https://images.unsplash.com/photo-1723367194881-fe2e53534170?auto=format&amp;fit=crop&amp;w=1920&amp;q=80')"></div>
+      <div class="hero-slide" data-slide="1" style="background-image:url('https://images.unsplash.com/photo-1762146828422-50a8bd416d3c?auto=format&amp;fit=crop&amp;w=1920&amp;q=80')"></div>
+      <div class="hero-slide" data-slide="2" style="background-image:url('https://images.unsplash.com/photo-1682084252808-7b147ffbdbb9?auto=format&amp;fit=crop&amp;w=1920&amp;q=80')"></div>
+      <div class="hero-slide-overlay"></div>
+    </div>
     <div class="grid-bg"></div>
+
     <div class="wrap hero-inner">
-      <div class="eyebrow mono" contenteditable="false">Portfolio</div>
-      <h1 contenteditable="false" id="heroName">Muhammad Ahsan Amin</h1>
-      <div class="role" contenteditable="false">Civil &amp; Structural Engineering — Fresh Graduate (July), UET Lahore</div>
-      <p class="lede" contenteditable="false">Fresh Graduate (July) in Civil Engineering focused on structural analysis and design, infrastructure planning, and non-destructive testing methods — seeking to translate technical training into sustainable, socially impactful engineering work.</p>
-      <div class="hero-cta">
-        <a class="btn" href="mailto:ahsanamin798@gmail.com">Email Me</a>
-        <a class="btn ghost" href="https://www.linkedin.com/in/ahsanaminofficial" target="_blank" rel="noopener">LinkedIn ↗</a>
+
+      <div class="hero-panel active" data-panel="0">
+        <div class="eyebrow mono" contenteditable="false">Welcome</div>
+        <h1 contenteditable="false" id="heroName">Muhammad Ahsan Amin</h1>
+        <div class="role" contenteditable="false">Civil Engineering — Fresh Graduate, UET Lahore</div>
+        <p class="lede" contenteditable="false">Fresh Graduate in Civil Engineering focused on structural analysis and design, infrastructure planning, and non-destructive testing methods — seeking to translate technical training into sustainable, socially impactful engineering work.</p>
+        <div class="hero-cta">
+          <a class="btn" href="mailto:ahsanamin798@gmail.com">Email Me</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/ahsanaminofficial" target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+        <div class="title-block">
+          <div class="tb-title" contenteditable="false">SUMMARY</div>
+          <div class="tb-cell" contenteditable="false"><b>Name</b>M. Ahsan Amin</div>
+          <div class="tb-cell" contenteditable="false"><b>Date</b><span id="tbDate"></span></div>
+          <div class="tb-cell" contenteditable="false"><b>Role</b>Civil Engineer</div>
+          <div class="tb-cell" contenteditable="false"><b>Location</b>Lahore, PK</div>
+        </div>
       </div>
-      <div class="title-block">
-        <div class="tb-title" contenteditable="false">Muhammad Ahsan Amin — Career Fair Portfolio</div>
-        <div class="tb-cell" contenteditable="false"><b>Name</b>M. Ahsan Amin</div>
-        <div class="tb-cell" contenteditable="false"><b>Date</b><span id="tbDate"></span></div>
-        <div class="tb-cell" contenteditable="false"><b>Role</b>Civil Engineer</div>
-        <div class="tb-cell" contenteditable="false"><b>Location</b>Lahore, PK</div>
+
+      <div class="hero-panel" data-panel="1">
+        <div class="eyebrow mono" contenteditable="false">Who I Am</div>
+        <h1 contenteditable="false">A Structural Mind, Grounded In Fieldwork</h1>
+        <p class="lede" contenteditable="false">A Civil &amp; Structural Engineering graduate from UET Lahore, shaped by on-site experience, a research mindset, and a steady interest in how structures actually get built — not just how they're calculated. I bring a disciplined, detail-first approach to every project I take on.</p>
+        <div class="hero-cta">
+          <a class="btn small-link" href="#about" onclick="event.preventDefault(); setActive('about');">Read my full bio</a>
+        </div>
       </div>
+
+      <div class="hero-panel" data-panel="2">
+        <div class="eyebrow mono" contenteditable="false">What I Do</div>
+        <h1 contenteditable="false">Design. Analyse. Build Responsibly.</h1>
+        <p class="lede" contenteditable="false">Structural analysis and design, infrastructure planning, geotechnical fundamentals, and non-destructive testing methods — backed by hands-on coursework and a working knowledge of the software and standards used on real sites.</p>
+        <div class="hero-cta">
+          <a class="btn small-link" href="#skills" onclick="event.preventDefault(); setActive('skills');">See my skills</a>
+        </div>
+      </div>
+
       <button type="button" class="home-scroll-cue" onclick="document.getElementById('homeMore').scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block:'start'})" aria-label="Scroll to learn more">
         Scroll to explore
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
       </button>
+    </div>
+
+    <div class="hero-dots" id="heroDots" role="tablist" aria-label="Homepage slides">
+      <button type="button" class="hero-dot active" data-goto="0" role="tab" aria-selected="true" aria-label="Slide 1: Welcome"></button>
+      <button type="button" class="hero-dot" data-goto="1" role="tab" aria-selected="false" aria-label="Slide 2: Who I Am"></button>
+      <button type="button" class="hero-dot" data-goto="2" role="tab" aria-selected="false" aria-label="Slide 3: What I Do"></button>
     </div>
   </div>
 
@@ -178,7 +213,7 @@
   <div class="wrap">
     <div class="eyebrow" contenteditable="false">About</div>
     <h2 contenteditable="false">Profile</h2>
-    <p contenteditable="false">I am a focused, energetic and dedicated Fresh Graduate (July) in Civil Engineering committed to advancing infrastructure planning, structural integrity monitoring, and sustainable development. I seek a professional environment to strengthen my technical expertise and translate it into green and socially impactful engineering solutions.</p>
+    <p contenteditable="false">I am a focused, energetic and dedicated Fresh Graduate in Civil Engineering committed to advancing infrastructure planning, structural integrity monitoring, and sustainable development. I seek a professional environment to strengthen my technical expertise and translate it into green and socially impactful engineering solutions.</p>
 
     <div class="rule"></div>
     <div class="eyebrow" contenteditable="false">Education</div>
@@ -750,7 +785,7 @@
     <div class="title-block" style="margin-top:44px;">
       <div class="tb-title" contenteditable="false">Thank you for visiting</div>
       <div class="tb-cell" contenteditable="false"><b>Location</b>Kot Radha Kishan, PK</div>
-      <div class="tb-cell" contenteditable="false"><b>Status</b>Fresh Graduate (July)</div>
+      <div class="tb-cell" contenteditable="false"><b>Status</b>Fresh Graduate</div>
     </div>
   </div>
 </footer>
