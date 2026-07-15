@@ -1531,3 +1531,160 @@
 
     startAutoplay();
   })();
+
+/* =========================================================
+   Perf: throttled lazy image loader with decode + fade-in
+   ========================================================= */
+(function(){
+  const MAX_CONCURRENT = 4;
+  let inFlight = 0;
+  const queue = [];
+  function pump(){
+    while(inFlight < MAX_CONCURRENT && queue.length){
+      const el = queue.shift();
+      inFlight++;
+      const url = el.dataset.bg;
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = url;
+      const done = () => {
+        el.style.backgroundImage = `url("${url}")`;
+        el.classList.add('bg-loaded');
+        el.removeAttribute('data-bg');
+        inFlight--; pump();
+      };
+      (img.decode ? img.decode().then(done, done) : (img.onload = img.onerror = done));
+    }
+  }
+  function enqueue(el){
+    if(!el || !el.dataset || !el.dataset.bg) return;
+    if(el.__queued) return; el.__queued = true;
+    el.classList.add('bg-fade');
+    queue.push(el); pump();
+  }
+  const io = 'IntersectionObserver' in window
+    ? new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){ io.unobserve(e.target); enqueue(e.target); }
+        });
+      }, { rootMargin: '600px 0px', threshold: 0.01 })
+    : null;
+  function scan(){
+    document.querySelectorAll('[data-bg]').forEach(el=>{
+      if(el.__queued) return;
+      if(io) io.observe(el); else enqueue(el);
+    });
+    // Eager-load first visible hero slide + first 3 tiles for perceived speed
+    const first = document.querySelector('.hero-slide.active[data-bg]');
+    if(first){ if(io) io.unobserve(first); enqueue(first); }
+    document.querySelectorAll('.project-tile[data-bg]').forEach((el,i)=>{ if(i<3){ if(io) io.unobserve(el); enqueue(el);} });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan);
+  else scan();
+  // Rescan when tabs/sections toggle visibility
+  const mo = new MutationObserver(()=>scan());
+  mo.observe(document.body, { attributes:true, subtree:true, attributeFilter:['class','style','hidden'] });
+  window.__rescanLazy = scan;
+})();
+
+/* =========================================================
+   Admin layer (passphrase: 'admin'), auto-save to localStorage
+   ========================================================= */
+(function(){
+  const PASS = 'admin';
+  const STORE_KEY = 'site-cms-v1';
+  const store = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+  const save = (()=> {
+    let t; return ()=>{ clearTimeout(t); t=setTimeout(()=>{
+      localStorage.setItem(STORE_KEY, JSON.stringify(store));
+      const el=document.getElementById('admSaved'); if(el){el.textContent='Saved';setTimeout(()=>el.textContent='',1200);}
+    },350); };
+  })();
+
+  // Restore stored edits
+  function applyStore(){
+    if(store.accent) document.documentElement.style.setProperty('--accent', store.accent);
+    if(store.bg) document.body.style.background = store.bg;
+    if(store.heroScale){ const h=document.querySelector('.hero'); if(h) h.style.minHeight = store.heroScale+'vh'; }
+    (store.texts||[]).forEach(({sel,html})=>{ const n=document.querySelector(sel); if(n) n.innerHTML=html; });
+    Object.entries(store.images||{}).forEach(([sel,url])=>{
+      const n=document.querySelector(sel);
+      if(n){ n.dataset.bg = url; n.classList.remove('bg-loaded'); n.__queued=false; }
+    });
+    if(window.__rescanLazy) window.__rescanLazy();
+  }
+  applyStore();
+
+  const gear = document.getElementById('adminLoginBtn');
+  const login = document.getElementById('adminLogin');
+  const bar = document.getElementById('adminBar');
+  const form = document.getElementById('adminLoginForm');
+  const pass = document.getElementById('adminPass');
+  document.getElementById('adminLoginCancel')?.addEventListener('click',()=>{ login.hidden=true; });
+  gear?.addEventListener('click',()=>{ login.hidden=false; pass.value=''; pass.focus(); });
+  form?.addEventListener('submit',(e)=>{
+    e.preventDefault();
+    if(pass.value === PASS){ login.hidden=true; gear.hidden=true; bar.hidden=false; }
+    else { pass.value=''; pass.placeholder='Wrong passphrase'; }
+  });
+
+  function cssPath(el){
+    if(el.id) return '#'+el.id;
+    const parts=[]; let n=el;
+    while(n && n.nodeType===1 && parts.length<5){
+      let p=n.nodeName.toLowerCase();
+      if(n.className && typeof n.className==='string'){ p+='.'+n.className.trim().split(/\s+/).slice(0,2).join('.'); }
+      const par=n.parentNode; if(par){ const same=[...par.children].filter(c=>c.nodeName===n.nodeName); if(same.length>1) p+=`:nth-of-type(${same.indexOf(n)+1})`; }
+      parts.unshift(p); n=n.parentNode;
+    }
+    return parts.join('>');
+  }
+
+  bar?.addEventListener('click',(e)=>{
+    const b=e.target.closest('button[data-adm]'); if(!b) return;
+    const a=b.dataset.adm;
+    if(a==='edit'){
+      document.body.classList.toggle('adm-edit');
+      const on=document.body.classList.contains('adm-edit');
+      document.querySelectorAll('h1,h2,h3,h4,p,li,span,a').forEach(n=>{ n.contentEditable = on ? 'true':'false'; });
+    }
+    if(a==='bg'){ const v=prompt('CSS background (color, gradient, url):', store.bg||''); if(v!==null){ store.bg=v; document.body.style.background=v; save(); } }
+    if(a==='accent'){ const v=prompt('Accent color (hex):', store.accent||'#f2c94c'); if(v){ store.accent=v; document.documentElement.style.setProperty('--accent',v); save(); } }
+    if(a==='hero'){ const v=prompt('Hero height in vh (40-100):', store.heroScale||'70'); if(v){ store.heroScale=v; const h=document.querySelector('.hero'); if(h) h.style.minHeight=v+'vh'; save(); } }
+    if(a==='export'){
+      const blob=new Blob([JSON.stringify(store,null,2)],{type:'application/json'});
+      const u=URL.createObjectURL(blob); const link=document.createElement('a');
+      link.href=u; link.download='site-cms.json'; link.click(); URL.revokeObjectURL(u);
+    }
+    if(a==='reset'){ if(confirm('Reset all admin changes?')){ localStorage.removeItem(STORE_KEY); location.reload(); } }
+    if(a==='logout'){ bar.hidden=true; gear.hidden=false; document.body.classList.remove('adm-edit'); document.querySelectorAll('[contenteditable=true]').forEach(n=>n.contentEditable='false'); }
+  });
+
+  // Debounced text capture + image tile click-to-replace (only in edit mode)
+  document.addEventListener('input',(e)=>{
+    if(!document.body.classList.contains('adm-edit')) return;
+    const n=e.target; if(!(n instanceof HTMLElement) || n.contentEditable!=='true') return;
+    store.texts = store.texts || [];
+    const sel = cssPath(n);
+    const idx = store.texts.findIndex(t=>t.sel===sel);
+    const entry = { sel, html: n.innerHTML };
+    if(idx>=0) store.texts[idx]=entry; else store.texts.push(entry);
+    save();
+  }, true);
+  document.addEventListener('click',(e)=>{
+    if(!document.body.classList.contains('adm-edit')) return;
+    const n=e.target.closest('.project-tile,.card-cover,.hero-slide');
+    if(!n) return;
+    e.preventDefault(); e.stopPropagation();
+    const cur=n.dataset.bg || (n.style.backgroundImage.match(/url\(["']?(.+?)["']?\)/)||[])[1] || '';
+    const v=prompt('Image URL:', cur);
+    if(v){
+      store.images = store.images || {};
+      const sel = cssPath(n);
+      store.images[sel] = v;
+      n.dataset.bg = v; n.classList.remove('bg-loaded'); n.__queued=false;
+      if(window.__rescanLazy) window.__rescanLazy();
+      save();
+    }
+  }, true);
+})();
