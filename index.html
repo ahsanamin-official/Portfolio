@@ -18,8 +18,8 @@
     <button class="sheet-tab active" data-target="home" onclick="setActive('home')"><span class="label" contenteditable="false">Home</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="projects" onclick="setActive('projects')"><span class="label" contenteditable="false">Projects</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="about" onclick="setActive('about')"><span class="label" contenteditable="false">About</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
-    <button class="sheet-tab" data-target="contact" onclick="setActive('contact')"><span class="label" contenteditable="false">Contact Us</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
   </div>
+  <button class="sheet-tab contact-tab-persistent" data-target="contact" onclick="setActive('contact')"><span class="label" contenteditable="false">Contact Us</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
   <button id="navSearchIconBtn" onclick="openSidebarSearch()" aria-label="Open search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
   </button>
@@ -55,7 +55,6 @@
     <button class="sheet-tab mobile-primary" data-target="home" onclick="setActive('home');closeSidebar();"><span class="label" contenteditable="false">Home</span></button>
     <button class="sheet-tab mobile-primary" data-target="projects" onclick="setActive('projects');closeSidebar();"><span class="label" contenteditable="false">Projects</span></button>
     <button class="sheet-tab mobile-primary" data-target="about" onclick="setActive('about');closeSidebar();"><span class="label" contenteditable="false">About</span></button>
-    <button class="sheet-tab mobile-primary" data-target="contact" onclick="setActive('contact');closeSidebar();"><span class="label" contenteditable="false">Contact Us</span></button>
     <div class="sidebar-divider mobile-primary" role="separator"></div>
     <button class="sheet-tab" data-target="experience" onclick="setActive('experience');closeSidebar();"><span class="label" contenteditable="false">Experience</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="skills" onclick="setActive('skills');closeSidebar();"><span class="label" contenteditable="false">Skills</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>

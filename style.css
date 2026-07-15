@@ -169,17 +169,21 @@
 
 
   @media (max-width:900px){
-    /* Primary tabs move into the slide-out menu well before the top bar
-       runs out of room, so the nav never needs to scroll sideways or
-       spill past the screen edge on any device. */
+    /* Home / Projects / About move into the slide-out sidebar well before
+       the top bar runs out of room, so the nav never needs to scroll
+       sideways or spill past the screen edge on any device. Contact stays
+       put in the top bar so it's always one tap away. */
     #navInner{display:none;}
     #sheetNav{overflow-x:hidden;}
+    .contact-tab-persistent{display:flex;margin-left:auto;}
   }
 
   @media (max-width:640px){
     #sidebarToggleBtn{padding:0 12px;}
     #navSearchIconBtn{padding:0 12px;margin-left:auto;}
     body.edit-mode #addTabBtn{display:none;}
+    .contact-tab-persistent{padding:14px 12px 12px 12px;}
+    .contact-tab-persistent .label{font-size:.8rem;}
   }
 
   /* ---------- MORE — HOVER DROPDOWN (desktop) ---------- */
@@ -979,7 +983,7 @@
   /* ---------- CROSS-DEVICE / ORIENTATION SUPPORT ---------- */
   /* Small phones, portrait */
   @media (max-width:480px){
-    .wrap{padding:0 16px;}
+    .wrap{padding:0 24px;}
     .hero-inner{padding:56px 0 40px;}
     .title-block{grid-template-columns:repeat(2,1fr);}
     #editPanel{width:min(88vw,240px);right:12px;bottom:64px;}

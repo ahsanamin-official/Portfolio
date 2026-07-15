@@ -245,11 +245,15 @@
       crumbs.push({label:'Experience', id:'experience'});
       crumbs.push({label:route.title || 'Experience', current:true});
     } else if(route.id === 'home'){
-      crumbs.push({label:'Home', current:true});
+      // No breadcrumb on the home page — a lone "Home" label here was
+      // redundant and non-interactive, so we just hide the bar instead.
     } else {
       crumbs.push({label:'Home', id:'home'});
       crumbs.push({label:SECTION_LABELS[route.id] || route.id, current:true});
     }
+
+    const bar = document.getElementById('breadcrumbBar');
+    if(bar) bar.style.display = crumbs.length ? '' : 'none';
 
     el.innerHTML = '';
     crumbs.forEach((c, i)=>{
