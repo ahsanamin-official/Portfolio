@@ -660,9 +660,9 @@
     });
   }
 
-  function positionSearchResults(){
-    const wrap = document.getElementById('siteSearchWrap');
-    const box = document.getElementById('siteSearchResults');
+  function positionSearchResults(wrap){
+    if(!wrap) wrap = document.querySelector('.search-widget');
+    const box = wrap ? wrap.querySelector('.search-results') : null;
     if(!wrap || !box) return;
     const rect = wrap.getBoundingClientRect();
     const width = Math.max(rect.width, 260);
@@ -673,10 +673,22 @@
     box.style.top = (rect.bottom + 6) + 'px';
     box.style.width = width + 'px';
   }
-  window.addEventListener('resize', positionSearchResults);
+  window.addEventListener('resize', function(){
+    document.querySelectorAll('.search-widget').forEach(function(w){
+      if(w.querySelector('.search-results.show')) positionSearchResults(w);
+    });
+  });
 
-  function runSiteSearch(query){
-    const box = document.getElementById('siteSearchResults');
+  function closeAllSearchResults(except){
+    document.querySelectorAll('.search-results.show').forEach(function(box){
+      if(box !== except) box.classList.remove('show');
+    });
+  }
+
+  function runSiteSearch(query, inputEl){
+    const wrap = inputEl ? inputEl.closest('.search-widget') : document.querySelector('.search-widget');
+    if(!wrap) return;
+    const box = wrap.querySelector('.search-results');
     const trimmed = query.trim();
     if(trimmed.length < 2){
       clearSearchHighlights();
@@ -711,20 +723,22 @@
         a.addEventListener('click', function(e){
           e.preventDefault();
           const idx = parseInt(a.getAttribute('data-result-index'), 10);
-          goToSearchResult(lastSearchResults[idx]);
+          goToSearchResult(lastSearchResults[idx], box);
         });
       });
     }
-    positionSearchResults();
+    positionSearchResults(wrap);
+    closeAllSearchResults(box);
     box.classList.add('show');
   }
 
-  function goToSearchResult(r){
+  function goToSearchResult(r, box){
     if(!r) return;
-    const box = document.getElementById('siteSearchResults');
+    if(!box) box = document.querySelector('.search-results.show');
+    if(box) box.classList.remove('show');
     const alreadyOnSheet = document.getElementById(r.sheetId).classList.contains('active');
-    box.classList.remove('show');
     setActive(r.sheetId);
+    if(document.body.classList.contains('sidebar-open')) closeSidebar();
     const jump = () => {
       r.block.scrollIntoView({behavior:'smooth', block:'center'});
       r.block.classList.remove('search-focus'); void r.block.offsetWidth;
@@ -734,8 +748,16 @@
     setTimeout(jump, alreadyOnSheet ? 30 : 220);
   }
 
+  function openSidebarSearch(){
+    openSidebar();
+    setTimeout(()=>{
+      const inp = document.getElementById('sidebarSearchInput');
+      if(inp) inp.focus();
+    }, 240);
+  }
+
   document.addEventListener('click', function(e){
-    if(!e.target.closest('#siteSearchWrap')) document.getElementById('siteSearchResults').classList.remove('show');
+    if(!e.target.closest('.search-widget')) closeAllSearchResults();
   });
 
   /* ---------- CONTACT FORM ---------- */
@@ -1038,10 +1060,10 @@
         if(document.getElementById('mediaModal').style.display === 'flex'){ closeMediaModal(); return; }
         if(document.getElementById('lightbox').style.display === 'flex'){ closeLightbox(); return; }
         if(document.body.classList.contains('sidebar-open')){ closeSidebar(); return; }
-        const results = document.getElementById('siteSearchResults');
-        if(results.classList.contains('show')){ results.classList.remove('show'); return; }
-        const search = document.getElementById('siteSearchInput');
-        if(search.value){ search.value=''; runSiteSearch(''); }
+        const openResults = document.querySelector('.search-results.show');
+        if(openResults){ openResults.classList.remove('show'); return; }
+        const focusedSearch = document.activeElement && document.activeElement.closest && document.activeElement.closest('.search-widget') ? document.activeElement : null;
+        if(focusedSearch && focusedSearch.value){ focusedSearch.value=''; runSiteSearch('', focusedSearch); }
         if(typing && e.target.blur) e.target.blur();
         return;
       }
@@ -1051,7 +1073,7 @@
       // "/" focuses the site search box, like most search UIs
       if(e.key === '/'){
         e.preventDefault();
-        document.getElementById('siteSearchInput').focus();
+        openSidebarSearch();
         return;
       }
 
