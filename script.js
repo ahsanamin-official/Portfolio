@@ -122,6 +122,7 @@
 
   function setActive(id){
     if(id !== 'project-detail') restoreDetailCard();
+    if(id !== 'experience-detail') restoreExperienceDetailCard();
     const current = document.querySelector('.sheet.active');
     const sec = document.getElementById(id);
     const tabs = document.querySelectorAll('.sheet-tab[data-target="'+id+'"]');
@@ -501,15 +502,24 @@
     const others = allCards.filter(c => c.getAttribute('data-pid') !== pid);
     let matches = others.filter(c => (c.getAttribute('data-cat') || '').split(' ').some(cc => cats.includes(cc)));
     if(matches.length === 0) matches = others;
+    for(let i = matches.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [matches[i], matches[j]] = [matches[j], matches[i]];
+    }
     matches = matches.slice(0, 4);
     matches.forEach(c => {
       const titleEl = c.querySelector('h3');
       const metaEl = c.querySelector('.meta');
       const imgEl = c.querySelector('.media-slot img');
+      const coverEl = c.querySelector('.card-cover');
       const tile = document.createElement('button');
       tile.type = 'button';
       tile.className = 'project-tile';
-      if(imgEl && imgEl.src) tile.style.backgroundImage = "url('" + imgEl.src + "')";
+      if(imgEl && imgEl.src){
+        tile.style.backgroundImage = "url('" + imgEl.src + "')";
+      } else if(coverEl && coverEl.style.backgroundImage){
+        tile.style.backgroundImage = coverEl.style.backgroundImage;
+      }
       const title = titleEl ? titleEl.textContent : 'Project';
       const meta = metaEl ? metaEl.textContent : '';
       tile.innerHTML = '<span class="pt-overlay"></span><span class="pt-text"><span class="pt-title">'+title+'</span><span class="pt-sub">'+meta+'</span></span>';
@@ -518,6 +528,70 @@
     });
     const section = document.getElementById('similarProjectsSection');
     if(section) section.style.display = matches.length ? '' : 'none';
+  }
+
+  let currentDetailEid = null;
+  let detailPlaceholderExp = null;
+
+  function restoreExperienceDetailCard(){
+    if(!currentDetailEid) return;
+    const holder = document.getElementById('experienceDetailBody');
+    const card = holder ? holder.querySelector('.card[data-eid="'+currentDetailEid+'"]') : null;
+    if(card && detailPlaceholderExp && detailPlaceholderExp.parentNode){
+      detailPlaceholderExp.parentNode.replaceChild(card, detailPlaceholderExp);
+    }
+    currentDetailEid = null;
+    detailPlaceholderExp = null;
+  }
+
+  function openExperienceDetail(eid){
+    const card = document.querySelector('#experienceGrid .card[data-eid="'+eid+'"]');
+    if(!card) return;
+    restoreExperienceDetailCard();
+    const holder = document.getElementById('experienceDetailBody');
+    detailPlaceholderExp = document.createElement('div');
+    detailPlaceholderExp.setAttribute('data-eid-placeholder', eid);
+    detailPlaceholderExp.style.display = 'none';
+    card.parentNode.insertBefore(detailPlaceholderExp, card);
+    holder.innerHTML = '';
+    holder.appendChild(card);
+    currentDetailEid = eid;
+    buildSimilarExperience(eid);
+    setActive('experience-detail');
+  }
+
+  function backToExperience(){
+    restoreExperienceDetailCard();
+    setActive('experience');
+  }
+
+  function buildSimilarExperience(eid){
+    const grid = document.getElementById('similarExperienceGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    const allCards = Array.from(document.querySelectorAll('#experienceGrid .card[data-eid], #experienceDetailBody .card[data-eid]'));
+    let others = allCards.filter(c => c.getAttribute('data-eid') !== eid);
+    for(let i = others.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [others[i], others[j]] = [others[j], others[i]];
+    }
+    others = others.slice(0, 4);
+    others.forEach(c => {
+      const titleEl = c.querySelector('h3');
+      const metaEl = c.querySelector('.org') || c.querySelector('.meta');
+      const coverEl = c.querySelector('.card-cover');
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'project-tile';
+      if(coverEl && coverEl.style.backgroundImage) tile.style.backgroundImage = coverEl.style.backgroundImage;
+      const title = titleEl ? titleEl.textContent : 'Experience';
+      const meta = metaEl ? metaEl.textContent : '';
+      tile.innerHTML = '<span class="pt-overlay"></span><span class="pt-text"><span class="pt-title">'+title+'</span><span class="pt-sub">'+meta+'</span></span>';
+      tile.onclick = function(){ openExperienceDetail(c.getAttribute('data-eid')); };
+      grid.appendChild(tile);
+    });
+    const section = document.getElementById('similarExperienceSection');
+    if(section) section.style.display = others.length ? '' : 'none';
   }
 
   function setProjectFilter(cat, btn){
