@@ -186,48 +186,8 @@
     .contact-tab-persistent .label{font-size:.8rem;}
   }
 
-  /* ---------- MORE — HOVER DROPDOWN (desktop) ---------- */
-  .nav-dropdown-wrap{position:relative;flex:none;align-self:stretch;display:flex;}
-  .nav-dropdown-wrap .dd-chevron{width:12px;height:12px;flex:none;margin-left:2px;transition:transform .18s ease;}
-  .nav-dropdown-wrap:hover .dd-chevron,
-  .nav-dropdown-wrap.dropdown-open .dd-chevron{transform:rotate(180deg);}
-
-  #moreDropdownPanel{
-    position:fixed;top:0;left:0;min-width:230px;
-    background:var(--card);border:1px solid var(--line);
-    border-top:3px solid var(--navy);
-    box-shadow:0 16px 32px rgba(10,14,24,0.22);
-    opacity:0;visibility:hidden;transform:translateY(-6px);
-    transition:opacity .18s ease,transform .18s ease,visibility .18s ease;
-    z-index:200;padding:4px 0;
-  }
-  @media (prefers-reduced-motion: reduce){#moreDropdownPanel{transition:none;}}
-  @media (min-width:641px){
-    .nav-dropdown-wrap:hover #moreDropdownPanel,
-    .nav-dropdown-wrap.dropdown-open #moreDropdownPanel,
-    #moreDropdownPanel:focus-within{
-      opacity:1;visibility:visible;transform:translateY(0);
-    }
-  }
-  #moreDropdownPanel .dropdown-item{
-    display:block;width:100%;text-align:left;
-    background:var(--card);color:var(--ink);
-    border:0;border-bottom:1px solid var(--line);
-    font-family:'Space Grotesk',sans-serif;font-size:.86rem;letter-spacing:0;
-    padding:14px 20px;cursor:pointer;
-    transition:background .15s ease,color .15s ease,padding-left .15s ease;
-  }
-  #moreDropdownPanel .dropdown-item:last-child{border-bottom:0;}
-  #moreDropdownPanel .dropdown-item:hover,
-  #moreDropdownPanel .dropdown-item:focus-visible{
-    background:var(--navy);color:#fff;padding-left:26px;outline:none;
-  }
-  #moreDropdownPanel .dropdown-item.active{
-    background:var(--navy-2);color:#fff;box-shadow:inset 3px 0 0 var(--amber);
-  }
-  @media (max-width:640px){
-    #moreDropdownPanel{display:none;}
-  }
+  /* ---------- MORE — replaced by the full-height sidebar; dropdown disabled ---------- */
+  #moreDropdownPanel{display:none!important;}
 
   /* ---------- SHEETS ---------- */
   .sheet{display:none;padding:64px 0 80px;}
@@ -245,7 +205,7 @@
   #home{padding:0;position:relative;background:var(--navy);overflow:hidden;}
   .hero-visual{color:#fff;position:relative;min-height:560px;}
   .hero-visual .grid-bg{display:none;}
-  .hero-inner{position:relative;z-index:2;padding:88px 0 76px;}
+  .hero-inner{position:relative;z-index:2;padding-top:88px;padding-bottom:76px;}
 
   /* ---------- HERO SLIDER (background images) ---------- */
   .hero-slides{position:absolute;inset:0;z-index:0;overflow:hidden;}
@@ -334,6 +294,7 @@
   .project-tile{
     position:relative;aspect-ratio:3/4;border:0;border-radius:var(--radius);
     padding:0;cursor:pointer;overflow:hidden;background-size:cover;background-position:center;
+    background-color:#232f45;
     box-shadow:0 2px 10px rgba(22,35,58,0.12);
     transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s ease;
   }
@@ -989,7 +950,7 @@
   /* Small phones, portrait */
   @media (max-width:480px){
     .wrap{padding:0 24px;}
-    .hero-inner{padding:56px 0 40px;}
+    .hero-inner{padding-top:56px;padding-bottom:40px;}
     .title-block{grid-template-columns:repeat(2,1fr);}
     #editPanel{width:min(88vw,240px);right:12px;bottom:64px;}
     #editToggle{padding:10px 14px;font-size:.72rem;}
@@ -997,7 +958,7 @@
   }
   /* Phones/tablets in landscape with limited height (common on Android) */
   @media (orientation:landscape) and (max-height:520px){
-    .hero-inner{padding:32px 0 28px;}
+    .hero-inner{padding-top:32px;padding-bottom:28px;}
     .sheet{padding:32px 0 48px;}
     #editPanel{max-height:70vh;overflow-y:auto;bottom:60px;}
     #richToolbar{max-height:70vh;overflow-y:auto;}
@@ -1030,28 +991,3 @@
   /* Keep the lightbox comfortable on any aspect ratio */
   #lightbox{padding:16px;}
   #lightbox img{max-height:min(90vh,90dvh);}
-
-/* ---- perf + admin (appended) ---- */
-.project-tile,.card-cover,.hero-slide{background-size:cover;background-position:center;transition:filter .35s ease, opacity .35s ease;}
-[data-bg]:not(.bg-loaded){filter:blur(12px) saturate(1.05);}
-[data-bg].bg-loaded{filter:none;}
-[data-bg].bg-fade{opacity:0;}
-[data-bg].bg-loaded.bg-fade{opacity:1;transition:opacity .4s ease;}
-@media (prefers-reduced-motion:reduce){[data-bg]{transition:none!important;filter:none!important;}}
-
-.admin-gear{position:fixed;right:16px;bottom:16px;z-index:9998;width:44px;height:44px;border-radius:50%;border:0;background:#111;color:#fff;font-size:20px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.25);}
-.admin-login{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999;}
-.admin-login-card{background:#fff;padding:22px;border-radius:12px;min-width:280px;display:flex;flex-direction:column;gap:12px;}
-.admin-login-card h3{margin:0;font-size:16px;}
-.admin-login-card input{padding:10px 12px;border:1px solid #ddd;border-radius:8px;font-size:14px;}
-.admin-login-actions{display:flex;gap:8px;justify-content:flex-end;}
-.admin-login-actions button{padding:8px 14px;border-radius:8px;border:0;background:#111;color:#fff;cursor:pointer;}
-.admin-login-actions button[type=button]{background:#eee;color:#111;}
-.admin-bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:9998;display:flex;gap:6px;align-items:center;background:#111;color:#fff;padding:8px 10px;border-radius:999px;box-shadow:0 10px 30px rgba(0,0,0,.3);flex-wrap:wrap;max-width:96vw;}
-.admin-bar .admin-tag{font-size:11px;letter-spacing:.12em;background:#f2c94c;color:#111;padding:2px 8px;border-radius:999px;font-weight:700;}
-.admin-bar button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.25);padding:6px 10px;border-radius:999px;font-size:12px;cursor:pointer;}
-.admin-bar button:hover{background:rgba(255,255,255,.1);}
-.admin-saved{font-size:11px;opacity:.7;min-width:60px;}
-#adminLogin[hidden],#adminBar[hidden],#adminLoginBtn[hidden]{display:none!important;}
-body.adm-edit [contenteditable=true]{outline:2px dashed #f2c94c;outline-offset:2px;border-radius:4px;}
-body.adm-edit .project-tile,body.adm-edit .card-cover,body.adm-edit .hero-slide{outline:2px dashed rgba(242,201,76,.6);cursor:crosshair;}
