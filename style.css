@@ -11,13 +11,15 @@
     --radius:2px;
   }
   *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth;overflow-x:hidden;width:100%;}
   body{
     margin:0;
     background:var(--paper);
     color:var(--ink);
     font-family:'IBM Plex Sans',sans-serif;
     line-height:1.55;
+    overflow-x:hidden;
+    width:100%;
   }
   h1,h2,h3,h4{
     font-family:'Space Grotesk',sans-serif;
@@ -31,12 +33,13 @@
   .wrap{max-width:1040px;margin:0 auto;padding:0 28px;}
 
   /* ---------- SHEET NAV ---------- */
+  #topBar{position:sticky;top:0;z-index:40;}
   #sheetNav{
-    position:sticky;top:0;z-index:40;
     background:var(--navy);
     border-bottom:2px solid var(--amber);
     display:flex;overflow-x:auto;
     scrollbar-width:thin;
+    max-width:100%;
   }
   #sheetNav .navInner{display:flex;align-items:stretch;margin-left:auto;}
   #navBrand{
@@ -51,7 +54,35 @@
     outline:none;
   }
   body.edit-mode #navBrand{cursor:text;box-shadow:inset 0 0 0 1px rgba(201,122,30,0.5);}
+  body:not(.edit-mode) #navBrand{cursor:pointer;}
+  body:not(.edit-mode) #navBrand:focus-visible{outline:2px solid var(--amber);outline-offset:-2px;}
   @media (max-width:640px){ #navBrand{font-size:.82rem;padding:0 12px;} }
+
+  /* ---------- BREADCRUMBS (Home > Section > Item, shown under the nav on every page) ---------- */
+  #breadcrumbBar{
+    background:var(--paper);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  #breadcrumbBar::-webkit-scrollbar{display:none;}
+  .breadcrumb-inner{
+    display:flex;align-items:center;gap:7px;
+    padding:9px 28px;
+    font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.02em;
+    white-space:nowrap;
+  }
+  .crumb-link{
+    background:none;border:0;padding:0;margin:0;
+    color:var(--steel);font:inherit;cursor:pointer;
+  }
+  .crumb-link:hover{color:var(--navy-2);text-decoration:underline;}
+  .crumb-link:focus-visible{outline:2px solid var(--steel);outline-offset:2px;}
+  .crumb-current{color:var(--ink);font-weight:600;}
+  .crumb-sep{color:var(--line);}
+  @media (max-width:640px){
+    .breadcrumb-inner{padding:8px 16px;font-size:.68rem;gap:5px;}
+  }
   .sheet-tab{
     flex:none;
     background:transparent;border:0;
@@ -128,10 +159,27 @@
     font-family:'IBM Plex Mono',monospace;display:none;
   }
 
+  /* Home / Projects / About / Contact only need to live in the sidebar on
+     mobile — on desktop they already sit in the top tab bar. */
+  .mobile-primary{display:none;}
+  .sidebar-divider{height:1px;background:rgba(255,255,255,0.14);margin:6px 18px;}
+  @media (max-width:900px){
+    .mobile-primary{display:flex;}
+  }
+
+
+  @media (max-width:900px){
+    /* Primary tabs move into the slide-out menu well before the top bar
+       runs out of room, so the nav never needs to scroll sideways or
+       spill past the screen edge on any device. */
+    #navInner{display:none;}
+    #sheetNav{overflow-x:hidden;}
+  }
 
   @media (max-width:640px){
     #sidebarToggleBtn{padding:0 12px;}
-    #navSearchIconBtn{padding:0 12px;}
+    #navSearchIconBtn{padding:0 12px;margin-left:auto;}
+    body.edit-mode #addTabBtn{display:none;}
   }
 
   /* ---------- MORE — HOVER DROPDOWN (desktop) ---------- */
@@ -257,7 +305,9 @@
   }
   .view-project-btn:hover,
   .view-experience-btn:hover{background:var(--navy-2,#1c2c47);color:#fff;transform:translateX(2px);}
-  .back-link{margin-bottom:18px;display:inline-flex;}
+  .back-link{margin-bottom:18px;display:inline-flex;align-items:center;gap:8px;}
+  .back-link svg{width:16px;height:16px;flex:none;transition:transform .15s ease;}
+  .back-link:hover svg{transform:translateX(-3px);}
   #similarProjectsSection .top-projects-grid,
   #similarExperienceSection .top-projects-grid{grid-template-columns:repeat(4,1fr);}
   @media (max-width:900px){
@@ -687,7 +737,8 @@
   .footer-socials a:hover{border-color:var(--amber);color:var(--amber);}
   .footer-bottom{border-top:1px solid rgba(255,255,255,0.14);}
   .footer-bottom-inner{
-    padding:18px 28px;text-align:center;
+    padding:18px 28px;
+    display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;
     font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:#9FB0C9;
   }
   .footer-bottom-inner b{color:#fff;font-weight:600;}
@@ -703,11 +754,12 @@
   /* ---------- EDIT MODE ---------- */
   #editToggle{
     display:inline-block;
-    position:fixed;bottom:20px;right:20px;z-index:100;
     background:var(--navy);color:#fff;border:1px solid var(--amber);
     font-family:'IBM Plex Mono',monospace;font-size:.78rem;
-    padding:12px 16px;border-radius:100px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.25);
+    padding:8px 14px;border-radius:100px;cursor:pointer;
+    margin-left:6px;
   }
+  #editToggle:hover{background:var(--navy-2);}
   #editPanel{
     position:fixed;bottom:70px;right:20px;z-index:100;
     background:#fff;border:1px solid var(--line);border-radius:var(--radius);
@@ -929,13 +981,12 @@
     .hero-inner{padding:56px 0 40px;}
     .title-block{grid-template-columns:repeat(2,1fr);}
     #editPanel{width:min(88vw,240px);right:12px;bottom:64px;}
-    #editToggle{right:12px;bottom:12px;padding:10px 14px;font-size:.72rem;}
+    #editToggle{padding:10px 14px;font-size:.72rem;}
     #richToolbar{max-width:92vw;}
   }
   /* Phones/tablets in landscape with limited height (common on Android) */
   @media (orientation:landscape) and (max-height:520px){
     .hero-inner{padding:32px 0 28px;}
-    #sheetNav{position:sticky;}
     .sheet{padding:32px 0 48px;}
     #editPanel{max-height:70vh;overflow-y:auto;bottom:60px;}
     #richToolbar{max-height:70vh;overflow-y:auto;}
@@ -962,8 +1013,8 @@
   }
   /* Respect safe areas on notched/curved screens */
   @supports (padding:max(0px)){
-    #editToggle{bottom:max(20px, env(safe-area-inset-bottom));right:max(20px, env(safe-area-inset-right));}
     #sheetNav{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}
+    #breadcrumbBar{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);}
   }
   /* Keep the lightbox comfortable on any aspect ratio */
   #lightbox{padding:16px;}

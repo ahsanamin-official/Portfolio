@@ -120,7 +120,9 @@
     }, {passive:true});
   })();
 
-  function setActive(id){
+  function setActive(id, opts){
+    opts = opts || {};
+    if(!document.getElementById(id)) return;
     if(id !== 'project-detail') restoreDetailCard();
     if(id !== 'experience-detail') restoreExperienceDetailCard();
     const current = document.querySelector('.sheet.active');
@@ -138,6 +140,8 @@
         if(t.closest('#moreSidebar') || t.closest('#moreDropdownPanel')) inSidebar = true;
       });
       if(toggleBtn) toggleBtn.classList.toggle('has-active', inSidebar);
+      const footerHomeLink = document.getElementById('footerHomeLink');
+      if(footerHomeLink) footerHomeLink.style.display = (id === 'home') ? 'none' : '';
       window.scrollTo({top:0, behavior:'auto'});
       requestAnimationFrame(()=> sec.classList.add('sheet-in'));
     }
@@ -149,6 +153,128 @@
     } else {
       activateNow();
     }
+
+    // Detail pages (project-detail / experience-detail) manage their own,
+    // more specific URL + breadcrumb further down — skip the generic
+    // section-level handling for those two here.
+    if(id !== 'project-detail' && id !== 'experience-detail'){
+      if(!opts.skipHistory) pushRoute('#'+id, {type:'section', id:id});
+      updateBreadcrumb({type:'section', id:id});
+    }
+  }
+
+  /* ---------- URL ROUTING (browser back/forward + shareable/bookmarkable links) ---------- */
+  const SECTION_LABELS = {
+    home:'Home', about:'About', experience:'Experience', projects:'Projects',
+    skills:'Skills', leadership:'Leadership', contact:'Contact Us'
+  };
+  let isRouting = false; // true while we're reacting to a popstate, so we don't re-push history
+
+  function pushRoute(hash, state){
+    if(isRouting) return;
+    if(location.hash === hash){
+      history.replaceState(state, '', hash);
+    } else {
+      history.pushState(state, '', hash);
+    }
+  }
+
+  function routeFromHash(){
+    const raw = location.hash.replace(/^#/, '');
+    if(!raw) return {type:'section', id:'home'};
+    const parts = raw.split('/');
+    if(parts[0] === 'projects' && parts[1]) return {type:'project', pid: decodeURIComponent(parts[1])};
+    if(parts[0] === 'experience' && parts[1]) return {type:'experience', eid: decodeURIComponent(parts[1])};
+    if(document.getElementById(parts[0])) return {type:'section', id:parts[0]};
+    return {type:'section', id:'home'};
+  }
+
+  function applyRoute(route){
+    isRouting = true;
+    try{
+      if(route.type === 'project'){
+        const exists = document.querySelector('#projectsGrid .card[data-pid="'+route.pid+'"]')
+          || document.querySelector('#projectDetailBody .card[data-pid="'+route.pid+'"]');
+        if(exists){
+          openProjectDetail(route.pid, {skipHistory:true});
+        } else {
+          setActive('home', {skipHistory:true});
+          history.replaceState({type:'section', id:'home'}, '', '#home');
+        }
+      } else if(route.type === 'experience'){
+        const exists = document.querySelector('#experienceGrid .card[data-eid="'+route.eid+'"]')
+          || document.querySelector('#experienceDetailBody .card[data-eid="'+route.eid+'"]');
+        if(exists){
+          openExperienceDetail(route.eid, {skipHistory:true});
+        } else {
+          setActive('home', {skipHistory:true});
+          history.replaceState({type:'section', id:'home'}, '', '#home');
+        }
+      } else {
+        setActive(route.id, {skipHistory:true});
+      }
+    } finally {
+      isRouting = false;
+    }
+  }
+
+  window.addEventListener('popstate', function(){
+    applyRoute(routeFromHash());
+  });
+
+  document.addEventListener('DOMContentLoaded', function(){
+    if(location.hash){
+      applyRoute(routeFromHash());
+    } else {
+      history.replaceState({type:'section', id:'home'}, '', location.pathname + location.search + '#home');
+      updateBreadcrumb({type:'section', id:'home'});
+    }
+  });
+
+  /* ---------- BREADCRUMBS (Home > Section > Item — shown on every page) ---------- */
+  function updateBreadcrumb(route){
+    const el = document.getElementById('breadcrumbInner');
+    if(!el) return;
+    const crumbs = [];
+    if(route.type === 'project'){
+      crumbs.push({label:'Home', id:'home'});
+      crumbs.push({label:'Projects', id:'projects'});
+      crumbs.push({label:route.title || 'Project', current:true});
+    } else if(route.type === 'experience'){
+      crumbs.push({label:'Home', id:'home'});
+      crumbs.push({label:'Experience', id:'experience'});
+      crumbs.push({label:route.title || 'Experience', current:true});
+    } else if(route.id === 'home'){
+      crumbs.push({label:'Home', current:true});
+    } else {
+      crumbs.push({label:'Home', id:'home'});
+      crumbs.push({label:SECTION_LABELS[route.id] || route.id, current:true});
+    }
+
+    el.innerHTML = '';
+    crumbs.forEach((c, i)=>{
+      if(i > 0){
+        const sep = document.createElement('span');
+        sep.className = 'crumb-sep';
+        sep.setAttribute('aria-hidden', 'true');
+        sep.textContent = '\u203a';
+        el.appendChild(sep);
+      }
+      if(c.current){
+        const cur = document.createElement('span');
+        cur.className = 'crumb-current';
+        cur.setAttribute('aria-current', 'page');
+        cur.textContent = c.label;
+        el.appendChild(cur);
+      } else {
+        const link = document.createElement('button');
+        link.type = 'button';
+        link.className = 'crumb-link';
+        link.textContent = c.label;
+        link.addEventListener('click', function(){ setActive(c.id); });
+        el.appendChild(link);
+      }
+    });
   }
 
   /* ---------- SIDEBAR (secondary sections: Experience / Skills / Leadership) ---------- */
@@ -472,8 +598,10 @@
     detailPlaceholder = null;
   }
 
-  function openProjectDetail(pid){
-    const card = document.querySelector('#projectsGrid .card[data-pid="'+pid+'"]');
+  function openProjectDetail(pid, opts){
+    opts = opts || {};
+    const card = document.querySelector('#projectsGrid .card[data-pid="'+pid+'"]')
+      || document.querySelector('#projectDetailBody .card[data-pid="'+pid+'"]');
     if(!card) return;
     restoreDetailCard();
     const holder = document.getElementById('projectDetailBody');
@@ -485,7 +613,10 @@
     holder.appendChild(card);
     currentDetailPid = pid;
     buildSimilarProjects(pid, card.getAttribute('data-cat') || '');
-    setActive('project-detail');
+    setActive('project-detail', {skipHistory:true});
+    if(!opts.skipHistory) pushRoute('#projects/'+encodeURIComponent(pid), {type:'project', pid:pid});
+    const titleEl = card.querySelector('h3');
+    updateBreadcrumb({type:'project', pid:pid, title: titleEl ? titleEl.textContent.trim() : 'Project'});
   }
 
   function backToProjects(){
@@ -544,8 +675,10 @@
     detailPlaceholderExp = null;
   }
 
-  function openExperienceDetail(eid){
-    const card = document.querySelector('#experienceGrid .card[data-eid="'+eid+'"]');
+  function openExperienceDetail(eid, opts){
+    opts = opts || {};
+    const card = document.querySelector('#experienceGrid .card[data-eid="'+eid+'"]')
+      || document.querySelector('#experienceDetailBody .card[data-eid="'+eid+'"]');
     if(!card) return;
     restoreExperienceDetailCard();
     const holder = document.getElementById('experienceDetailBody');
@@ -557,7 +690,10 @@
     holder.appendChild(card);
     currentDetailEid = eid;
     buildSimilarExperience(eid);
-    setActive('experience-detail');
+    setActive('experience-detail', {skipHistory:true});
+    if(!opts.skipHistory) pushRoute('#experience/'+encodeURIComponent(eid), {type:'experience', eid:eid});
+    const titleEl = card.querySelector('h3');
+    updateBreadcrumb({type:'experience', eid:eid, title: titleEl ? titleEl.textContent.trim() : 'Experience'});
   }
 
   function backToExperience(){

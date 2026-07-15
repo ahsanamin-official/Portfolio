@@ -11,8 +11,9 @@
 <body>
 
 <!-- ===================== SHEET NAV ===================== -->
+<div id="topBar">
 <nav id="sheetNav">
-  <div id="navBrand" contenteditable="false">PORTFOLIO</div>
+  <div id="navBrand" contenteditable="false" onclick="if(!document.body.classList.contains('edit-mode')){ setActive('home'); }" role="link" tabindex="0" onkeydown="if((event.key==='Enter'||event.key===' ') && !document.body.classList.contains('edit-mode')){ event.preventDefault(); setActive('home'); }">PORTFOLIO</div>
   <div class="navInner" id="navInner">
     <button class="sheet-tab active" data-target="home" onclick="setActive('home')"><span class="label" contenteditable="false">Home</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="projects" onclick="setActive('projects')"><span class="label" contenteditable="false">Projects</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
@@ -23,7 +24,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
   </button>
   <div id="moreDropdownWrap" class="nav-dropdown-wrap">
-    <button id="sidebarToggleBtn" onclick="toggleMoreMenu()" aria-label="Open more sections" aria-expanded="false" aria-controls="moreSidebar">
+    <button id="sidebarToggleBtn" onclick="toggleMoreMenu()" aria-label="Open menu" aria-expanded="false" aria-controls="moreSidebar">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
     </button>
     <div id="moreDropdownPanel" role="menu" aria-label="More sections">
@@ -34,12 +35,16 @@
   </div>
   <button id="addTabBtn" onclick="addTab()">+ Add page</button>
 </nav>
+<nav id="breadcrumbBar" aria-label="Breadcrumb">
+  <div class="wrap breadcrumb-inner" id="breadcrumbInner"></div>
+</nav>
+</div>
 
 <!-- ===================== SIDEBAR (secondary sections) ===================== -->
 <div id="sidebarOverlay" onclick="closeSidebar()"></div>
 <aside id="moreSidebar" aria-hidden="true">
   <div id="sidebarHead">
-    <span class="mono">MORE SECTIONS</span>
+    <span class="mono" id="sidebarHeadLabel">MENU</span>
     <button id="sidebarCloseBtn" onclick="closeSidebar()" aria-label="Close menu">✕</button>
   </div>
   <div class="search-widget" id="sidebarSearchWidget">
@@ -47,6 +52,11 @@
     <div class="search-results"></div>
   </div>
   <div class="navInner" id="sidebarInner">
+    <button class="sheet-tab mobile-primary" data-target="home" onclick="setActive('home');closeSidebar();"><span class="label" contenteditable="false">Home</span></button>
+    <button class="sheet-tab mobile-primary" data-target="projects" onclick="setActive('projects');closeSidebar();"><span class="label" contenteditable="false">Projects</span></button>
+    <button class="sheet-tab mobile-primary" data-target="about" onclick="setActive('about');closeSidebar();"><span class="label" contenteditable="false">About</span></button>
+    <button class="sheet-tab mobile-primary" data-target="contact" onclick="setActive('contact');closeSidebar();"><span class="label" contenteditable="false">Contact Us</span></button>
+    <div class="sidebar-divider mobile-primary" role="separator"></div>
     <button class="sheet-tab" data-target="experience" onclick="setActive('experience');closeSidebar();"><span class="label" contenteditable="false">Experience</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="skills" onclick="setActive('skills');closeSidebar();"><span class="label" contenteditable="false">Skills</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="leadership" onclick="setActive('leadership');closeSidebar();"><span class="label" contenteditable="false">Leadership</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
@@ -1021,7 +1031,7 @@
   <div class="wrap footer-cols">
     <div class="footer-col">
       <h4>Home</h4>
-      <a href="#" onclick="event.preventDefault(); setActive('home');">Home</a>
+      <a href="#" id="footerHomeLink" style="display:none" onclick="event.preventDefault(); setActive('home');">Home</a>
       <a href="#" onclick="event.preventDefault(); setActive('about');">About Me</a>
     </div>
     <div class="footer-col">
@@ -1061,12 +1071,12 @@
   <div class="footer-bottom">
     <div class="wrap footer-bottom-inner">
       Copyright © <span id="footerYear"></span>. <b>Muhammad Ahsan Amin</b>. All Rights Reserved.
+      <button id="editToggle" onclick="requestEditMode()">✎ Edit Site</button>
     </div>
   </div>
 </footer>
 
 <!-- ===================== EDIT MODE UI ===================== -->
-<button id="editToggle" onclick="requestEditMode()">✎ Edit Site</button>
 <div id="editPanel">
   <div id="editPanelHandle"><span class="grip">⠿ Drag panel</span><span class="resetPos" onclick="resetEditPanelPos(event)" title="Reset to default position">↺ reset</span></div>
   <h5>Theme colours</h5>
