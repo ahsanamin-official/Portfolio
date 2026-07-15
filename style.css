@@ -472,7 +472,7 @@
 
   /* ---------- BACK TO TOP ---------- */
   #backToTop{
-    position:fixed;bottom:96px;right:20px;z-index:90;
+    position:fixed;bottom:20px;right:20px;z-index:90;
     width:44px;height:44px;border-radius:100px;
     background:var(--navy);color:var(--amber);border:1px solid var(--amber);
     display:flex;align-items:center;justify-content:center;cursor:pointer;
@@ -484,7 +484,7 @@
   #backToTop:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,0.3);}
   #backToTop svg{width:18px;height:18px;}
   #backToTop:focus-visible{outline:2px solid var(--amber);outline-offset:2px;}
-  @media(max-width:720px){#backToTop{bottom:76px;right:14px;width:40px;height:40px;}}
+  @media(max-width:720px){#backToTop{bottom:14px;right:14px;width:40px;height:40px;}}
   .hero-inner .eyebrow{color:#8FB0DD;}
   .hero-inner h1{font-size:clamp(2.1rem,5vw,3.4rem);color:#fff;max-width:14ch;}
   .hero-inner .role{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:1rem;margin-bottom:22px;}
