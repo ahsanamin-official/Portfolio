@@ -36,7 +36,6 @@
   #topBar{position:sticky;top:0;z-index:40;}
   #sheetNav{
     background:var(--navy);
-    border-bottom:2px solid var(--amber);
     display:flex;overflow-x:auto;
     scrollbar-width:thin;
     max-width:100%;
@@ -46,10 +45,10 @@
     flex:none;
     display:flex;align-items:center;
     font-family:'Space Grotesk',sans-serif;
-    font-weight:600;font-size:.95rem;letter-spacing:.01em;
-    color:#fff;
+    font-weight:600;font-size:.95rem;letter-spacing:.06em;
+    color:#F7F5EF;
     padding:0 16px;
-    border-right:1px solid rgba(255,255,255,0.14);
+    transform:translateY(-2px);
     white-space:nowrap;
     outline:none;
   }
@@ -109,8 +108,8 @@
 
   /* ---------- SIDEBAR TOGGLE + SIDEBAR (secondary sections) ---------- */
   #sidebarToggleBtn{
-    flex:none;display:flex;align-items:center;gap:6px;
-    background:transparent;color:#C9D3E4;border:0;border-right:1px solid rgba(255,255,255,0.08);
+    flex:none;display:flex;align-items:center;justify-content:center;gap:6px;
+    background:transparent;color:#C9D3E4;border:0;
     padding:0 16px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-size:.82rem;
     align-self:stretch;transition:background .15s ease,color .15s ease;
   }
@@ -159,31 +158,21 @@
     font-family:'IBM Plex Mono',monospace;display:none;
   }
 
-  /* Home / Projects / About / Contact only need to live in the sidebar on
-     mobile — on desktop they already sit in the top tab bar. */
-  .mobile-primary{display:none;}
+  /* All sections (Home / Projects / About / Contact / Experience / Skills /
+     Leadership) live in the slide-out sidebar on every device — the top
+     bar only shows the brand, search and menu toggle. */
+  .mobile-primary{display:flex;}
   .sidebar-divider{height:1px;background:rgba(255,255,255,0.14);margin:6px 18px;}
-  @media (max-width:900px){
-    .mobile-primary{display:flex;}
-  }
 
-
-  @media (max-width:900px){
-    /* Home / Projects / About move into the slide-out sidebar well before
-       the top bar runs out of room, so the nav never needs to scroll
-       sideways or spill past the screen edge on any device. Contact stays
-       put in the top bar so it's always one tap away. */
-    #navInner{display:none;}
-    #sheetNav{overflow-x:hidden;}
-    .contact-tab-persistent{display:flex;margin-left:auto;}
-  }
+  #navInner{display:none!important;}
+  #sheetNav{overflow-x:hidden;}
+  .contact-tab-persistent{display:none!important;}
+  #navSearchIconBtn{margin-left:auto;}
 
   @media (max-width:640px){
     #sidebarToggleBtn{padding:0 12px;}
-    #navSearchIconBtn{padding:0 12px;margin-left:auto;}
+    #navSearchIconBtn{padding:0 12px;}
     body.edit-mode #addTabBtn{display:none;}
-    .contact-tab-persistent{padding:14px 12px 12px 12px;}
-    .contact-tab-persistent .label{font-size:.8rem;}
   }
 
   /* ---------- MORE — replaced by the full-height sidebar; dropdown disabled ---------- */
@@ -798,7 +787,7 @@
   /* ---------- NAV SEARCH ICON ---------- */
   #navSearchIconBtn{
     flex:none;display:flex;align-items:center;justify-content:center;
-    background:transparent;color:#C9D3E4;border:0;border-right:1px solid rgba(255,255,255,0.08);
+    background:transparent;color:#C9D3E4;border:0;
     padding:0 14px;cursor:pointer;align-self:stretch;transition:background .15s ease,color .15s ease;
   }
   #navSearchIconBtn svg{width:16px;height:16px;flex:none;}

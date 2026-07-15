@@ -1300,7 +1300,7 @@
     btn.setAttribute('data-target', id);
     btn.onclick = function(){ setActive(id); };
     btn.innerHTML = '<span class="label" contenteditable="false">'+name+'</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span>';
-    document.getElementById('navInner').appendChild(btn);
+    document.getElementById('sidebarInner').appendChild(btn);
 
     const sec = document.createElement('section');
     sec.className = 'sheet';
