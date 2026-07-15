@@ -232,7 +232,7 @@
   .sheet.sheet-out{display:block;opacity:0;transform:translateY(-6px);}
   @media (prefers-reduced-motion: reduce){.sheet.active{transition:none;opacity:1;transform:none;}}
   .eyebrow{
-    font-family:'IBM Plex Mono',monospace;font-size:.72rem;letter-spacing:.14em;
+    font-family:'IBM Plex Mono',monospace;font-size:.88rem;font-weight:600;letter-spacing:.14em;
     color:var(--steel);text-transform:uppercase;margin-bottom:10px;
   }
   .rule{height:1px;background:var(--line);margin:36px 0;}
@@ -305,7 +305,9 @@
   }
   .view-project-btn:hover,
   .view-experience-btn:hover{background:var(--navy-2,#1c2c47);color:#fff;transform:translateX(2px);}
-  .back-link{margin-bottom:18px;display:inline-flex;align-items:center;gap:8px;}
+  .back-link{margin-bottom:18px;display:inline-flex;align-items:center;gap:8px;
+    background:transparent;color:var(--steel);border-color:var(--steel);}
+  .back-link:hover{color:var(--navy-2);border-color:var(--navy-2);background:transparent;transform:none;box-shadow:none;}
   .back-link svg{width:16px;height:16px;flex:none;transition:transform .15s ease;}
   .back-link:hover svg{transform:translateX(-3px);}
   #similarProjectsSection .top-projects-grid,
