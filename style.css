@@ -748,12 +748,17 @@
     font-family:'IBM Plex Mono',monospace;font-size:.74rem;color:#9FB0C9;
   }
   .footer-bottom-inner b{color:#fff;font-weight:600;}
+  .footer-copy{text-align:center;}
 
   @media (max-width:820px){
     .footer-cols{grid-template-columns:repeat(2,1fr);gap:30px;padding:44px 20px 32px;}
   }
   @media (max-width:480px){
-    .footer-cols{grid-template-columns:1fr;padding:36px 20px 28px;}
+    .footer-cols{grid-template-columns:1fr;padding:36px 20px 32px;}
+    .footer-bottom-inner{
+      flex-direction:column;padding:22px 20px 26px;gap:10px;
+    }
+    #editToggle{margin-left:0;}
   }
   footer#contact a{color:var(--amber);}
 
