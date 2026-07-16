@@ -1521,7 +1521,7 @@
     const total  = slides.length;
     if(!total) return;
 
-    const AUTOPLAY_MS = 5000;
+    const AUTOPLAY_MS = 3000;
     let current = 0;
     let timer = null;
 
@@ -1554,6 +1554,16 @@
       dot.addEventListener('click', () => { goTo(i); restartAutoplay(); });
     });
 
+    // Swipe left/right to change slides on touch devices.
+    let touchStartX = null;
+    visual.addEventListener('touchstart', e=>{ touchStartX = e.touches[0].clientX; }, {passive:true});
+    visual.addEventListener('touchend', e=>{
+      if(touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if(Math.abs(dx) > 40){ goTo(current + (dx < 0 ? 1 : -1)); restartAutoplay(); }
+      touchStartX = null;
+    });
+
     // Pause while the user is interacting with this slide, resume after.
     visual.addEventListener('mouseenter', stopAutoplay);
     visual.addEventListener('mouseleave', startAutoplay);
@@ -1568,3 +1578,507 @@
 
     startAutoplay();
   })();
+
+/* ---------- PLAY STORE STYLE HORIZONTAL PROJECT ROWS ---------- */
+function psScroll(btn, dir){
+  const wrap = btn.closest('.ps-row-wrap');
+  const row = wrap ? wrap.querySelector('.ps-row') : null;
+  if(!row) return;
+  const amount = Math.max(row.clientWidth * 0.8, 200);
+  row.scrollBy({ left: dir * amount, behavior: 'smooth' });
+}
+
+function updatePsRowArrows(row){
+  const wrap = row.closest('.ps-row-wrap');
+  if(!wrap) return;
+  const prev = wrap.querySelector('.ps-prev');
+  const next = wrap.querySelector('.ps-next');
+  const overflows = row.scrollWidth > row.clientWidth + 4;
+  if(prev) prev.style.display = (overflows && row.scrollLeft > 4) ? 'flex' : 'none';
+  if(next) next.style.display = (overflows && (row.scrollLeft + row.clientWidth < row.scrollWidth - 4)) ? 'flex' : 'none';
+}
+
+function enablePsDrag(row){
+  let isDown = false, moved = false, startX = 0, startScroll = 0;
+  row.addEventListener('mousedown', e=>{
+    isDown = true; moved = false; row.classList.add('ps-dragging');
+    startX = e.pageX; startScroll = row.scrollLeft;
+  });
+  window.addEventListener('mouseup', ()=>{ isDown = false; row.classList.remove('ps-dragging'); });
+  row.addEventListener('mouseleave', ()=>{ isDown = false; row.classList.remove('ps-dragging'); });
+  row.addEventListener('mousemove', e=>{
+    if(!isDown) return;
+    e.preventDefault();
+    const dx = e.pageX - startX;
+    if(Math.abs(dx) > 3) moved = true;
+    row.scrollLeft = startScroll - dx;
+  });
+  row.addEventListener('click', e=>{
+    if(moved){ e.preventDefault(); e.stopPropagation(); moved = false; }
+  }, true);
+}
+
+(function initPsRows(){
+  const rows = Array.from(document.querySelectorAll('.ps-row'));
+  if(!rows.length) return;
+  rows.forEach(row=>{
+    updatePsRowArrows(row);
+    enablePsDrag(row);
+    row.addEventListener('scroll', ()=>updatePsRowArrows(row));
+    if('ResizeObserver' in window){
+      new ResizeObserver(()=>updatePsRowArrows(row)).observe(row);
+    }
+  });
+  let resizeTimer;
+  window.addEventListener('resize', ()=>{
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(()=>rows.forEach(updatePsRowArrows), 120);
+  });
+})();
+
+/* ===================== Section image-loading overlay ===================== *
+ * If a section's images take longer than 2s to load, show a centered
+ * "Loading {Section} / Please Wait..." spinner instead of a blank/broken
+ * layout. Each section is only checked once per page load (cached after
+ * its images finish loading, so switching back is instant).
+ * ============================================================================ */
+(function(){
+  const loadedSections = new Set();
+
+  function getSectionLabel(id){
+    const tab = document.querySelector('.sheet-tab[data-target="'+id+'"] .label');
+    if(tab && tab.textContent.trim()) return tab.textContent.trim();
+    return id.replace(/-/g,' ').replace(/\b\w/g, c => c.toUpperCase());
+  }
+
+  function collectImageUrls(sec){
+    const urls = new Set();
+    sec.querySelectorAll('[style*="background-image"]').forEach(el=>{
+      const bg = el.style.backgroundImage || '';
+      const m = bg.match(/url\((['"]?)(.*?)\1\)/);
+      if(m && m[2]) urls.add(m[2]);
+    });
+    sec.querySelectorAll('img[src]').forEach(img=>{
+      if(img.src) urls.add(img.src);
+    });
+    return Array.from(urls);
+  }
+
+  function showLoader(sec, label){
+    let ov = sec.querySelector(':scope > .section-loader');
+    if(!ov){
+      ov = document.createElement('div');
+      ov.className = 'section-loader';
+      ov.innerHTML = '<div class="sl-spinner"></div><div class="sl-text"><b>Loading '+label+'</b>Please Wait…</div>';
+      sec.prepend(ov);
+    }
+    requestAnimationFrame(()=> ov.classList.add('show'));
+  }
+
+  function hideLoader(sec){
+    const ov = sec.querySelector(':scope > .section-loader');
+    if(ov){
+      ov.classList.remove('show');
+      setTimeout(()=>{ if(ov.parentNode) ov.remove(); }, 260);
+    }
+  }
+
+  function handleSection(id){
+    if(loadedSections.has(id)) return;
+    const sec = document.getElementById(id);
+    if(!sec) return;
+    const urls = collectImageUrls(sec);
+    if(!urls.length){ loadedSections.add(id); return; }
+
+    let remaining = urls.length;
+    let done = false;
+    const label = getSectionLabel(id);
+
+    const timer = setTimeout(()=>{
+      if(!done) showLoader(sec, label);
+    }, 2000);
+
+    function checkDone(){
+      remaining--;
+      if(remaining <= 0 && !done){
+        done = true;
+        clearTimeout(timer);
+        hideLoader(sec);
+        loadedSections.add(id);
+      }
+    }
+
+    urls.forEach(url=>{
+      const img = new Image();
+      img.onload = checkDone;
+      img.onerror = checkDone;
+      img.src = url;
+    });
+  }
+
+  document.addEventListener('sheet:activated', e=>{
+    if(e.detail && e.detail.id) handleSection(e.detail.id);
+  });
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const active = document.querySelector('.sheet.active');
+    if(active) handleSection(active.id);
+  });
+})();
+
+/* ===================== AI Portfolio Assistant ===================== *
+ * Lightweight, fully client-side Q&A assistant. It builds a small
+ * knowledge base straight from the page's own content (About, Experience,
+ * Projects, Skills, Leadership, Home stats) so it always reflects whatever
+ * is currently on the site, then answers questions by matching keywords
+ * against that content. When nothing relevant is found, it offers to email
+ * Ahsan directly or open the contact form to request a meeting.
+ * ==================================================================== */
+(function(){
+  const CONTACT_EMAIL = 'ahsanamin798@gmail.com';
+  const STOPWORDS = new Set(['the','and','for','are','you','your','have','has','had','with','this','that',
+    'what','whats',"what's",'how','who','can','could','would','tell','me','about','does','did','was','were',
+    'from','into','their','they','them','a','an','of','to','in','on','is','it','do','does','did','please',
+    'i','my','mine','we','our','us','any','some','all','more','info','information','know','like','want',
+    'hi','hello','hey','thanks','thank']);
+
+  // Slang / synonym map: alternate phrasings people actually type -> canonical
+  // words that are likely to appear in the portfolio content. This lets the
+  // assistant understand casual, indirect, or slangy questions instead of
+  // requiring exact keyword matches.
+  const SYNONYMS = {
+    'job':'experience','jobs':'experience','gig':'experience','gigs':'experience',
+    'work':'experience','worked':'experience','working':'experience','career':'experience',
+    'employer':'experience','employers':'experience','company':'experience','companies':'experience',
+    'role':'experience','roles':'experience','position':'experience','positions':'experience',
+    'internship':'experience','intern':'experience',
+    'coding':'skills','code':'skills','programming':'skills','languages':'skills',
+    'tech':'skills','techstack':'skills','stack':'skills','tools':'skills','toolkit':'skills',
+    'abilities':'skills','strengths':'skills','proficient':'skills','proficiency':'skills',
+    'expertise':'skills','skilled':'skills','knows':'skills','knowhow':'skills',
+    'project':'projects','projects':'projects','built':'projects','build':'projects',
+    'made':'projects','created':'projects','portfolio':'projects','app':'projects','apps':'projects',
+    'website':'projects','application':'projects',
+    'school':'education','college':'education','university':'education','degree':'education',
+    'study':'education','studied':'education','studies':'education','educated':'education',
+    'lead':'leadership','led':'leadership','leading':'leadership','manage':'leadership',
+    'managed':'leadership','management':'leadership','team':'leadership','volunteer':'leadership',
+    'club':'leadership','society':'leadership','organization':'leadership','president':'leadership',
+    'bio':'about','background':'about','summary':'about','intro':'about','introduction':'about',
+    'himself':'about','person':'about',
+    'contact':'contact','email':'contact','reach':'contact','hire':'contact','hiring':'contact',
+    'reachout':'contact','connect':'contact',
+    'ml':'machine','ai':'artificial','dev':'developer','devs':'developer',
+    'frontend':'front','backend':'back','fullstack':'full'
+  };
+
+  // Cheap Levenshtein distance for typo/fuzzy tolerance on short words.
+  function levenshtein(a,b){
+    if(a===b) return 0;
+    const al=a.length, bl=b.length;
+    if(!al) return bl; if(!bl) return al;
+    let prev = new Array(bl+1); for(let j=0;j<=bl;j++) prev[j]=j;
+    for(let i=1;i<=al;i++){
+      const cur=[i];
+      for(let j=1;j<=bl;j++){
+        cur[j] = a[i-1]===b[j-1] ? prev[j-1] : 1+Math.min(prev[j-1],prev[j],cur[j-1]);
+      }
+      prev = cur;
+    }
+    return prev[bl];
+  }
+
+  // Light stemmer: strips common suffixes so "building"/"built"/"builds"
+  // loosely line up with "build".
+  function stem(w){
+    return w.replace(/(ing|edly|ies|ied|ers|er|ed|es|s)$/,'');
+  }
+
+  function expandWord(w){
+    const out = new Set([w, stem(w)]);
+    if(SYNONYMS[w]) out.add(SYNONYMS[w]);
+    if(SYNONYMS[stem(w)]) out.add(SYNONYMS[stem(w)]);
+    return out;
+  }
+
+  function tokenize(str){
+    return (str||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/)
+      .filter(w=>w.length>2 && !STOPWORDS.has(w));
+  }
+
+  function sectionLabel(id){
+    const tab = document.querySelector('.sheet-tab[data-target="'+id+'"] .label');
+    if(tab && tab.textContent.trim()) return tab.textContent.trim();
+    return id.charAt(0).toUpperCase()+id.slice(1);
+  }
+
+  /* Build a small knowledge base by grouping meaningful text nodes from
+     each major section into bite-size chunks. */
+  function buildKnowledgeBase(){
+    const ids = ['home','about','experience','skills','projects','leadership'];
+    const chunks = [];
+    ids.forEach(id=>{
+      const sec = document.getElementById(id);
+      if(!sec) return;
+      const label = sectionLabel(id);
+      const nodes = sec.querySelectorAll('h1,h2,h3,h4,p,li,.stat-cap,.ps-title,.ps-sub,.chip,.tb-cell,.exp-role,.exp-org,.role,.lede');
+      let group = [];
+      let groupLen = 0;
+      function flush(){
+        const text = group.join(' — ').trim();
+        if(text.length > 12) chunks.push({section:id, label, text});
+        group = []; groupLen = 0;
+      }
+      nodes.forEach(el=>{
+        const t = el.textContent.replace(/\s+/g,' ').trim();
+        if(!t || t.length<2) return;
+        group.push(t);
+        groupLen += t.length;
+        if(groupLen > 260) flush();
+      });
+      flush();
+    });
+    return chunks;
+  }
+
+  let KB = [];
+
+  // Explicit "which section is this question about" detection — separate
+  // from the looser SYNONYMS map used for in-text scoring. Keyed only to
+  // real navigable section ids so we can jump the user there.
+  const SECTION_INTENT = {
+    about: ['about','bio','background','summary','intro','introduction','who'],
+    experience: ['experience','job','jobs','work','worked','working','career','employer','employers',
+      'company','companies','role','roles','position','positions','internship','intern','history'],
+    skills: ['skill','skills','coding','code','programming','language','languages','tech','stack',
+      'tool','tools','toolkit','ability','abilities','strength','strengths','proficient','proficiency','expertise'],
+    projects: ['project','projects','built','build','made','create','created','app','apps',
+      'website','application','portfolio'],
+    leadership: ['leadership','lead','led','leading','manage','managed','management','team',
+      'volunteer','club','society','organization','president'],
+    home: ['home','overview','stats','summary'],
+    contact: ['contact','email','reach','hire','hiring','connect']
+  };
+
+  // Which query words point at which section, using the same stemming used
+  // for the rest of matching so "worked"/"working"/"work" all agree.
+  function detectSectionIntent(qWords){
+    const votes = {};
+    qWords.forEach(qw=>{
+      const qs = stem(qw);
+      Object.keys(SECTION_INTENT).forEach(sec=>{
+        SECTION_INTENT[sec].forEach(kw=>{
+          if(qw === kw || qs === stem(kw)) votes[sec] = (votes[sec]||0) + 1;
+        });
+      });
+    });
+    let bestSec = null, bestVotes = 0;
+    Object.keys(votes).forEach(sec=>{
+      if(votes[sec] > bestVotes){ bestVotes = votes[sec]; bestSec = sec; }
+    });
+    return bestSec;
+  }
+
+  // Score one query word against one chunk word, allowing exact match,
+  // stemmed match, substring match, and small-typo (fuzzy) match.
+  function wordSimilarity(qw, w){
+    if(qw === w) return 1;
+    const qs = stem(qw), ws = stem(w);
+    if(qs === ws) return 0.9;
+    if(w.length > 3 && qw.length > 3 && (w.includes(qw) || qw.includes(w))) return 0.7;
+    // Fuzzy: tolerate 1 typo on short words, 2 on longer ones.
+    if(qw.length > 3 && w.length > 3){
+      const maxDist = Math.min(qw.length, w.length) >= 7 ? 2 : 1;
+      if(levenshtein(qw, w) <= maxDist) return 0.6;
+    }
+    return 0;
+  }
+
+  function scoreChunk(queryExpansions, chunkWordsSet){
+    let score = 0;
+    queryExpansions.forEach(expandedSet=>{
+      let best = 0;
+      expandedSet.forEach(qw=>{
+        chunkWordsSet.forEach(w=>{
+          const sim = wordSimilarity(qw, w);
+          if(sim > best) best = sim;
+        });
+      });
+      score += best;
+    });
+    return score;
+  }
+
+  function bestChunkIn(chunks, queryExpansions){
+    let best = null, bestScore = 0;
+    chunks.forEach(chunk=>{
+      if(!chunk._wordSet) chunk._wordSet = new Set(tokenize(chunk.text));
+      const s = scoreChunk(queryExpansions, chunk._wordSet);
+      if(s > bestScore){ bestScore = s; best = chunk; }
+    });
+    return {chunk:best, score:bestScore};
+  }
+
+  function findAnswer(query){
+    const qWords = tokenize(query);
+    if(!qWords.length) return null;
+    const queryExpansions = qWords.map(expandWord);
+    const intentSection = detectSectionIntent(qWords);
+
+    // If the question clearly points at one section (e.g. "experience" vs
+    // "projects"), search only within that section first so the two never
+    // collapse into the same answer.
+    if(intentSection){
+      const sectionChunks = KB.filter(c=>c.section===intentSection);
+      if(sectionChunks.length){
+        const {chunk, score} = bestChunkIn(sectionChunks, queryExpansions);
+        if(chunk && score >= 0.4) return chunk;
+        // Nothing scored inside the section — still send them there rather
+        // than a generic fallback, using the section's lead chunk.
+        if(sectionChunks[0]) return sectionChunks[0];
+      }
+    }
+
+    const {chunk, score} = bestChunkIn(KB, queryExpansions);
+    const threshold = Math.max(0.6, qWords.length * 0.35);
+    return (chunk && score >= threshold) ? chunk : null;
+  }
+
+  /* ---------- UI wiring ---------- */
+  const widget   = document.getElementById('aiChatWidget');
+  const launcher = document.getElementById('aiChatLauncher');
+  const panel    = document.getElementById('aiChatPanel');
+  const closeBtn = document.getElementById('aiChatClose');
+  const body     = document.getElementById('aiChatBody');
+  const form     = document.getElementById('aiChatForm');
+  const input    = document.getElementById('aiChatInput');
+  if(!widget || !launcher || !panel || !form || !input) return;
+
+  function scrollBody(){ body.scrollTop = body.scrollHeight; }
+
+  function addMessage(text, who, actionsHtml){
+    const div = document.createElement('div');
+    div.className = 'ai-msg ' + (who === 'user' ? 'ai-msg-user' : 'ai-msg-bot');
+    div.innerHTML = (who === 'user' ? '' : '<span class="ai-msg-tag">Assistant</span>') + escapeHtml(text);
+    if(actionsHtml){
+      const act = document.createElement('div');
+      act.className = 'ai-chat-actions';
+      act.innerHTML = actionsHtml;
+      div.appendChild(act);
+    }
+    body.appendChild(div);
+    scrollBody();
+    return div;
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str;
+    return d.innerHTML;
+  }
+
+  function mailtoLink(subject, message){
+    return 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(message);
+  }
+
+  function openContactWithQuestion(question){
+    closeChat();
+    setActive('contact');
+    setTimeout(()=>{
+      const msg = document.getElementById('cfMessage');
+      if(msg){
+        msg.value = question ? ('Re: ' + question) : '';
+        msg.focus();
+      }
+    }, 260);
+  }
+
+  // Expose a couple of handlers used by inline onclick in generated buttons.
+  window.__aiChatEmail = function(question){
+    window.location.href = mailtoLink('Question from portfolio chat', question || 'Hi Ahsan, I had a question after browsing your portfolio:');
+  };
+  window.__aiChatMeeting = function(question){
+    window.location.href = mailtoLink('Meeting request', 'Hi Ahsan, I\'d like to set up a short meeting to discuss: ' + (question || ''));
+  };
+  window.__aiChatOpenContact = function(question){
+    openContactWithQuestion(question);
+  };
+  window.__aiChatGoTo = function(sectionId){
+    closeChat();
+    if(typeof setActive === 'function') setActive(sectionId);
+    else window.location.hash = sectionId;
+  };
+
+  function fallbackActions(question){
+    const q = escapeHtml(question).replace(/'/g,"\\'").replace(/"/g,'&quot;');
+    return '<button type="button" onclick="__aiChatEmail(\''+q+'\')">✉ Email Ahsan</button>'+
+           '<button type="button" onclick="__aiChatMeeting(\''+q+'\')">📅 Request a meeting</button>'+
+           '<button type="button" onclick="__aiChatOpenContact(\''+q+'\')">Open contact form</button>';
+  }
+
+  function goToActions(sectionId, label){
+    return '<button type="button" onclick="__aiChatGoTo(\''+sectionId+'\')">→ Go to '+escapeHtml(label)+'</button>';
+  }
+
+  const GREETING_RE = /^(hi|hello|hey|yo|sup|good (morning|afternoon|evening))[\s!.,]*$/i;
+  const WHO_RE = /who (are|r) (you|u)|what (are|is) (you|this)/i;
+  const CONTACT_RE = /\b(contact|email|hire|hiring|reach ?out|get in touch)\b/i;
+
+  function respond(question){
+    if(GREETING_RE.test(question.trim())){
+      addMessage('Hey! Ask me about Ahsan\'s projects, tools, experience or education — I\'ll pull the answer straight from this portfolio.', 'bot');
+      return;
+    }
+    if(WHO_RE.test(question)){
+      addMessage('I\'m a small built-in assistant that answers questions using the content of this portfolio. For anything I can\'t cover, I\'ll help you contact Ahsan directly.', 'bot');
+      return;
+    }
+    if(CONTACT_RE.test(question)){
+      addMessage('You can reach Ahsan directly here:', 'bot', fallbackActions(question));
+      return;
+    }
+    const match = findAnswer(question);
+    if(match){
+      addMessage(match.text, 'bot', goToActions(match.section, match.label));
+    } else {
+      addMessage('I couldn\'t find specifics on that in the portfolio. Want to reach out directly?', 'bot', fallbackActions(question));
+    }
+  }
+
+  function openChat(){
+    widget.classList.add('open');
+    launcher.setAttribute('aria-expanded','true');
+    panel.setAttribute('aria-hidden','false');
+    if(!KB.length) KB = buildKnowledgeBase();
+    setTimeout(()=> input.focus(), 150);
+  }
+  function closeChat(){
+    widget.classList.remove('open');
+    launcher.setAttribute('aria-expanded','false');
+    panel.setAttribute('aria-hidden','true');
+  }
+  function toggleChat(){
+    widget.classList.contains('open') ? closeChat() : openChat();
+  }
+
+  launcher.addEventListener('click', toggleChat);
+  if(closeBtn) closeBtn.addEventListener('click', closeChat);
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape' && widget.classList.contains('open')) closeChat();
+  });
+  document.addEventListener('click', e=>{
+    if(widget.classList.contains('open') && !widget.contains(e.target)) closeChat();
+  });
+
+  form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const q = input.value.trim();
+    if(!q) return;
+    addMessage(q, 'user');
+    input.value = '';
+    setTimeout(()=> respond(q), 220);
+  });
+
+  // Rebuild the knowledge base if the site owner edits content in edit mode.
+  document.addEventListener('sheet:activated', ()=>{ KB = buildKnowledgeBase(); });
+})();

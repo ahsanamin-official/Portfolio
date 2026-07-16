@@ -53,15 +53,17 @@
   </div>
   <div class="navInner" id="sidebarInner">
     <button class="sheet-tab mobile-primary" data-target="home" onclick="setActive('home');closeSidebar();"><span class="label" contenteditable="false">Home</span></button>
-    <button class="sheet-tab mobile-primary" data-target="projects" onclick="setActive('projects');closeSidebar();"><span class="label" contenteditable="false">Projects</span></button>
     <button class="sheet-tab mobile-primary" data-target="about" onclick="setActive('about');closeSidebar();"><span class="label" contenteditable="false">About</span></button>
-    <button class="sheet-tab mobile-primary" data-target="contact" onclick="setActive('contact');closeSidebar();"><span class="label" contenteditable="false">Contact Us</span></button>
-    <div class="sidebar-divider mobile-primary" role="separator"></div>
     <button class="sheet-tab" data-target="experience" onclick="setActive('experience');closeSidebar();"><span class="label" contenteditable="false">Experience</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab mobile-primary" data-target="projects" onclick="setActive('projects');closeSidebar();"><span class="label" contenteditable="false">Projects</span></button>
     <button class="sheet-tab" data-target="skills" onclick="setActive('skills');closeSidebar();"><span class="label" contenteditable="false">Skills</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
     <button class="sheet-tab" data-target="leadership" onclick="setActive('leadership');closeSidebar();"><span class="label" contenteditable="false">Leadership</span><span class="tab-del" onclick="event.stopPropagation();delTab(this)">✕</span></button>
+    <button class="sheet-tab mobile-primary" data-target="contact" onclick="setActive('contact');closeSidebar();"><span class="label" contenteditable="false">Contact Us</span></button>
   </div>
   <button id="addTabBtnSidebar" onclick="addTab()">+ Add page</button>
+  <div class="kbd-hint-side">
+    <kbd>/</kbd> search &nbsp; <kbd>←</kbd><kbd>→</kbd> pages &nbsp; <kbd>Esc</kbd> close
+  </div>
 </aside>
 
 <!-- ===================== HOME ===================== -->
@@ -139,11 +141,11 @@
             <div class="stat-cap" contenteditable="false">Class Topper</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="8">0</span><sup>+</sup></div>
+            <div class="stat-num mono"><span class="stat-count" data-target="15">0</span><sup>+</sup></div>
             <div class="stat-cap" contenteditable="false">Academic Projects</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="2">0</span><sup>+</sup></div>
+            <div class="stat-num mono"><span class="stat-count" data-target="3">0</span><sup>+</sup></div>
             <div class="stat-cap" contenteditable="false">Field Projects</div>
           </div>
           <div class="stat-item">
@@ -155,12 +157,8 @@
             <div class="stat-cap" contenteditable="false">Departmental Booklets Designed</div>
           </div>
           <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="2">0</span><sup>+</sup></div>
+            <div class="stat-num mono"><span class="stat-count" data-target="3">0</span></div>
             <div class="stat-cap" contenteditable="false">3-Min Video Presentations Won</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-num mono"><span class="stat-count" data-target="5">0</span><sup>+</sup></div>
-            <div class="stat-cap" contenteditable="false">Academic Video Presentations Produced</div>
           </div>
         </div>
       </div>
@@ -174,19 +172,23 @@
           </div>
         </div>
 
-        <div class="home-video-row" id="homeVideoRow">
-          <div class="home-video-item">
-            <div class="video-embed"><iframe src="https://www.youtube.com/embed/bXg9pCCgAkk?si=RtAIk5bGIgMFGxyf" title="Undergraduate Research Assistant" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" allowfullscreen></iframe></div>
-            <span class="hv-caption" contenteditable="false">Undergraduate Research Assistant</span>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="home-video-row ps-row" id="homeVideoRow">
+            <div class="home-video-item">
+              <div class="video-embed"><iframe src="https://www.youtube.com/embed/bXg9pCCgAkk?si=RtAIk5bGIgMFGxyf" title="Undergraduate Research Assistant" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" allowfullscreen></iframe></div>
+              <span class="hv-caption" contenteditable="false">Undergraduate Research Assistant</span>
+            </div>
+            <div class="home-video-item">
+              <div class="video-embed"><iframe src="https://www.youtube.com/embed/U3mbaL5mDW0?si=GUZ--0iURkpxzf_p" title="Structural Analysis — Basement Roof Slab" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" allowfullscreen></iframe></div>
+              <span class="hv-caption" contenteditable="false">Structural Analysis — Basement Roof Slab</span>
+            </div>
+            <div class="home-video-item">
+              <div class="video-embed"><iframe src="https://www.youtube.com/embed/BEwWkWVl64A?si=opjeQiIV338hGQQ1" title="Citicorp Center Case Study" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" allowfullscreen></iframe></div>
+              <span class="hv-caption" contenteditable="false">Citicorp Center Case Study</span>
+            </div>
           </div>
-          <div class="home-video-item">
-            <div class="video-embed"><iframe src="https://www.youtube.com/embed/U3mbaL5mDW0?si=GUZ--0iURkpxzf_p" title="Structural Analysis — Basement Roof Slab" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" allowfullscreen></iframe></div>
-            <span class="hv-caption" contenteditable="false">Structural Analysis — Basement Roof Slab</span>
-          </div>
-          <div class="home-video-item">
-            <div class="video-embed"><iframe src="https://www.youtube.com/embed/BEwWkWVl64A?si=opjeQiIV338hGQQ1" title="Citicorp Center Case Study" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" loading="lazy" allowfullscreen></iframe></div>
-            <span class="hv-caption" contenteditable="false">Citicorp Center Case Study</span>
-          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
         </div>
       </div>
 
@@ -203,28 +205,32 @@
           </div>
         </div>
 
-        <div class="top-projects-grid" id="topExperienceGrid">
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="openExperienceDetail('ex1')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Undergraduate Research Assistant</span>
-              <span class="pt-sub" contenteditable="false">Civil Engineering Department, UET Lahore</span>
-            </span>
-          </button>
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="openExperienceDetail('ex2')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Design Engineer Intern</span>
-              <span class="pt-sub" contenteditable="false">ILF Consulting Engineers (Pvt.) Ltd.</span>
-            </span>
-          </button>
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1626885930974-4b69aa21bbf9?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="openExperienceDetail('ex3')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Engineer Intern</span>
-              <span class="pt-sub" contenteditable="false">Communications and Works Department, Punjab</span>
-            </span>
-          </button>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="top-projects-grid ps-row" id="topExperienceGrid">
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="openExperienceDetail('ex1')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Undergraduate Research Assistant</span>
+                <span class="pt-sub" contenteditable="false">Civil Engineering Department, UET Lahore</span>
+              </span>
+            </button>
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="openExperienceDetail('ex2')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Design Engineer Intern</span>
+                <span class="pt-sub" contenteditable="false">ILF Consulting Engineers (Pvt.) Ltd.</span>
+              </span>
+            </button>
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1626885930974-4b69aa21bbf9?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="openExperienceDetail('ex3')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Engineer Intern</span>
+                <span class="pt-sub" contenteditable="false">Communications and Works Department, Punjab</span>
+              </span>
+            </button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
         </div>
       </div>
 
@@ -241,42 +247,46 @@
           </div>
         </div>
 
-        <div class="top-projects-grid" id="topProjectsGrid">
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1777919393730-463e2c0b7f4c?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Compressive Strength Prediction</span>
-              <span class="pt-sub" contenteditable="false">Final Year Project — Digital Image Analysis</span>
-            </span>
-          </button>
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1706552128399-43e2baff0fe5?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Steel Fink Roof Truss</span>
-              <span class="pt-sub" contenteditable="false">Analysis &amp; design in CSI ETABS</span>
-            </span>
-          </button>
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1762320723940-464123fef1ec?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Steel Bridge Design</span>
-              <span class="pt-sub" contenteditable="false">AASHTO deck truss under HL-93 loading</span>
-            </span>
-          </button>
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1623620893978-aa52349a1d7e?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Water-Retaining Structures</span>
-              <span class="pt-sub" contenteditable="false">Overhead tanks &amp; RC swimming pool design</span>
-            </span>
-          </button>
-          <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
-            <span class="pt-overlay"></span>
-            <span class="pt-text">
-              <span class="pt-title" contenteditable="false">Frame Structure Design</span>
-              <span class="pt-sub" contenteditable="false">ETABS model — reinforced concrete framing</span>
-            </span>
-          </button>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="top-projects-grid ps-row" id="topProjectsGrid">
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1777919393730-463e2c0b7f4c?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Compressive Strength Prediction</span>
+                <span class="pt-sub" contenteditable="false">Final Year Project — Digital Image Analysis</span>
+              </span>
+            </button>
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1706552128399-43e2baff0fe5?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Steel Fink Roof Truss</span>
+                <span class="pt-sub" contenteditable="false">Analysis &amp; design in CSI ETABS</span>
+              </span>
+            </button>
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1762320723940-464123fef1ec?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Steel Bridge Design</span>
+                <span class="pt-sub" contenteditable="false">AASHTO deck truss under HL-93 loading</span>
+              </span>
+            </button>
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1623620893978-aa52349a1d7e?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Water-Retaining Structures</span>
+                <span class="pt-sub" contenteditable="false">Overhead tanks &amp; RC swimming pool design</span>
+              </span>
+            </button>
+            <button type="button" class="project-tile" data-bg="https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?auto=format&amp;fit=crop&amp;w=900&amp;q=80" onclick="setActive('projects')">
+              <span class="pt-overlay"></span>
+              <span class="pt-text">
+                <span class="pt-title" contenteditable="false">Frame Structure Design</span>
+                <span class="pt-sub" contenteditable="false">ETABS model — reinforced concrete framing</span>
+              </span>
+            </button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
         </div>
       </div>
 
@@ -407,17 +417,115 @@
   <div class="wrap">
     <div class="eyebrow" contenteditable="false">Projects</div>
     <h2 contenteditable="false">Selected coursework &amp; independent work</h2>
-    <div class="filter-bar" id="projectFilterBar">
-      <button class="filter-chip active" data-filter="all" onclick="setProjectFilter('all',this)">All</button>
-      <button class="filter-chip" data-filter="structure" onclick="setProjectFilter('structure',this)">Structure</button>
-      <button class="filter-chip" data-filter="geotech" onclick="setProjectFilter('geotech',this)">Geotech</button>
-      <button class="filter-chip" data-filter="estimation" onclick="setProjectFilter('estimation',this)">Estimation</button>
-      <button class="filter-chip" data-filter="python" onclick="setProjectFilter('python',this)">Python</button>
-      <button class="filter-chip" data-filter="pavement" onclick="setProjectFilter('pavement',this)">Pavement</button>
-      <button class="filter-chip" data-filter="project-management" onclick="setProjectFilter('project-management',this)">Project Management</button>
-      <button class="filter-chip" data-filter="extracurricular" onclick="setProjectFilter('extracurricular',this)">Extracurricular</button>
+    <!-- ===== Play Store style horizontal browsable sections ===== -->
+    <div id="psSections">
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Machine Learning (FYP &amp; Python)</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p1')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1777919393730-463e2c0b7f4c?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Compressive Strength ML</span><span class="ps-sub">Final Year Project</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p6')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1515879218367-8466d910aaa4?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Python Engineering Tools</span><span class="ps-sub">Numerical Computing</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Design of Structures</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p7')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1508450859948-4e04fabaa4ea?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Frame Structure Design</span><span class="ps-sub">ETABS Model</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p8')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1517011453931-c30f571a4fab?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Base Plate Design</span><span class="ps-sub">Steel Connections</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p9')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1762320723940-464123fef1ec?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Steel Bridge Design</span><span class="ps-sub">AASHTO HL-93</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p10')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1616179058441-37aa58affac8?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Retaining Walls</span><span class="ps-sub">Gravity &amp; Cantilever</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p11')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1623620893978-aa52349a1d7e?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Water-Retaining Structures</span><span class="ps-sub">Tanks &amp; Pool</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p12')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1512207736890-6ffed8a84e8d?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Masonry House Design</span><span class="ps-sub">Load Path Layout</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Plain &amp; Reinforced Concrete</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p13')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1575971637203-d6255d9947a9?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Column Design</span><span class="ps-sub">Uniaxial &amp; Biaxial</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p14')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1587052694737-a972e4186288?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Flat Slab Design</span><span class="ps-sub">Direct Design Method</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p15')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1712711649566-16c7cfcf341c?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Footing Design</span><span class="ps-sub">Isolated &amp; Combined</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p16')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1574757987642-5755f0839101?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">RC Topics</span><span class="ps-sub">Bond &amp; Splices</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Structural Analysis &amp; Design</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p3')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1563166423-482a8c14b2d6?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Structural Analysis Beam Project</span><span class="ps-sub">Basement Roof Slab</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p4')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1531834685032-c34bf0d84c77?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Mech of Materials Wood Project</span><span class="ps-sub">Wood House Feasibility</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p5')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1706552128399-43e2baff0fe5?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Steel Structure Project</span><span class="ps-sub">Fink Roof Truss</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Estimation &amp; CAD</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p2')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1652483614757-1c7d1aafa996?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Citicorp Center Ethics</span><span class="ps-sub">Case Study</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Transportation</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p17')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1600590395815-077ef25797c3?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Pavement Design</span><span class="ps-sub">Rigid &amp; Flexible</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p18')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1665453931477-5ce41650664c?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Road Superelevation</span><span class="ps-sub">Horizontal Curves</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p19')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1619185960651-36df716d4dab?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Vertical Alignment</span><span class="ps-sub">Road Design</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p20')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1686136188013-a930c4dc5f38?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Sight Distance</span><span class="ps-sub">Safety Analysis</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p21')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1610611342266-bcc131ecc78c?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Signal &amp; Interlocking</span><span class="ps-sub">Railway</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p22')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1540804236945-b6ae24bfe0a9?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Railway Design</span><span class="ps-sub">Track Alignment</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p23')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1638555063519-d009e6f3b28b?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Runway Layout</span><span class="ps-sub">Airport Design</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p24')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1503412345334-7d4ca6c34f61?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Payload &amp; Range</span><span class="ps-sub">Airport Design</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p25')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1684778014130-92eac779d4a1?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Wind Rose Diagram</span><span class="ps-sub">Airport Planning</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p26')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1628626101670-fe74950237d0?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Traffic Analysis</span><span class="ps-sub">Flow Characteristics</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p27')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1571035330093-fd93f6321a7b?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Design of ESAL</span><span class="ps-sub">Pavement Loading</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
+      <div class="ps-section">
+        <div class="ps-head"><h3 contenteditable="false">Hydraulics</h3></div>
+        <div class="ps-row-wrap">
+          <button type="button" class="ps-nav ps-prev" onclick="psScroll(this,-1)" aria-label="Scroll left">‹</button>
+          <div class="ps-row">
+            <button type="button" class="ps-card" onclick="openProjectDetail('p28')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1606050309588-741702cceb9b?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Gravity Dam Design</span><span class="ps-sub">Stability Analysis</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p29')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1560279966-2d681f3d4dfc?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Canal Design</span><span class="ps-sub">Irrigation</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p30')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1569918190173-6a5792908184?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Creep Length Design</span><span class="ps-sub">Seepage Analysis</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p31')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1580960062319-b904d81f8b59?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Fall Design</span><span class="ps-sub">Canal Structures</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p32')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1503754163129-a02a0c097de0?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Canal Outlet Design</span><span class="ps-sub">Irrigation</span></button>
+            <button type="button" class="ps-card" onclick="openProjectDetail('p33')"><span class="ps-cover" style="background-image:url('https://images.unsplash.com/photo-1617722864422-62df702413a9?auto=format&amp;fit=crop&amp;w=600&amp;q=80')"></span><span class="ps-title">Crop Water Requirements</span><span class="ps-sub">Irrigation Planning</span></button>
+          </div>
+          <button type="button" class="ps-nav ps-next" onclick="psScroll(this,1)" aria-label="Scroll right">›</button>
+        </div>
+      </div>
+
     </div>
-    <div class="grid-2" id="projectsGrid">
+
+    <div class="grid-2" id="projectsGrid" style="display:none">
 
       <div class="card" data-cat="python estimation" data-pid="p1">
         <button class="del-btn" onclick="this.closest('.card').remove()">✕</button>
@@ -882,7 +990,7 @@
       </div>
 
     </div>
-    <button class="add-btn" onclick="addCard('projectsGrid', 'exp')">+ Add project</button>
+    <button class="add-btn" onclick="addCard('projectsGrid', 'exp')" style="display:none">+ Add project</button>
   </div>
 </section>
 
@@ -1071,6 +1179,9 @@
   <div class="footer-bottom">
     <div class="wrap footer-bottom-inner">
       <span class="footer-copy">Copyright © <span id="footerYear"></span>. <b>Muhammad Ahsan Amin</b>. All Rights Reserved.</span>
+      <div class="kbd-hint-foot">
+        <kbd>/</kbd> search &nbsp; <kbd>←</kbd><kbd>→</kbd> pages &nbsp; <kbd>Esc</kbd> close
+      </div>
       <button id="editToggle" onclick="requestEditMode()">✎ Edit Site</button>
     </div>
   </div>
@@ -1219,13 +1330,33 @@
   </div>
 </div>
 
-<div class="kbd-hint">
-  <kbd>/</kbd> search &nbsp; <kbd>←</kbd><kbd>→</kbd> pages &nbsp; <kbd>Esc</kbd> close
-</div>
-
 <button id="backToTop" onclick="scrollToTop()" aria-label="Back to top">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
+
+<!-- ===================== AI PORTFOLIO ASSISTANT (all sections) ===================== -->
+<div id="aiChatWidget">
+  <button id="aiChatLauncher" aria-label="Ask a question about this portfolio" aria-expanded="false" aria-controls="aiChatPanel">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    <span id="aiChatDot"></span>
+  </button>
+
+  <div id="aiChatPanel" aria-hidden="true">
+    <div class="ai-chat-head">
+      <span class="mono">ASK ABOUT THIS PORTFOLIO</span>
+      <button id="aiChatClose" aria-label="Close chat">✕</button>
+    </div>
+    <div class="ai-chat-body" id="aiChatBody">
+      <div class="ai-msg ai-msg-bot">Hi! Ask me anything about Ahsan's projects, skills, or experience. If it's something specific I can't cover here, I'll help you reach out directly.</div>
+    </div>
+    <form id="aiChatForm" autocomplete="off">
+      <input type="text" id="aiChatInput" placeholder="e.g. What ML project did you build?" autocomplete="off">
+      <button type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+    </form>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
