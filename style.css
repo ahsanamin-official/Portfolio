@@ -1324,3 +1324,39 @@ kbd{background:rgba(74,111,165,0.12);color:var(--navy);border-radius:4px;}
   .jn-item:nth-child(even) .jn-dot{right:auto;left:-10px;}
 }
 @media(prefers-reduced-motion:reduce){.jn-item{opacity:1;transform:none;transition:none;}}
+
+/* ===== Polish pass: remove flat white boxes, unify glass ===== */
+.home-more{background:transparent;}
+.ps-row,.ps-row-wrap{background:transparent;}
+.ps-card{background:transparent !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;border:0 !important;box-shadow:none !important;border-radius:0;padding:0 !important;}
+.ps-cover{border-radius:var(--radius-md);box-shadow:var(--glass-shadow);}
+.ps-title{color:var(--navy);}
+.ps-card:hover .ps-cover{box-shadow:var(--glass-shadow-hover);}
+#projectDetailBody .card,#experienceDetailBody .card{background:rgba(255,255,255,0.38);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.6);border-radius:var(--radius-lg);box-shadow:var(--glass-shadow);padding:20px;}
+#projectDetailBody .card-cover,#experienceDetailBody .card-cover{border-radius:var(--radius-md);}
+.gallery figure{background:rgba(255,255,255,0.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.6);}
+.sheet .card,.grid-2 .card,.skills-col{background:rgba(255,255,255,0.4);}
+.title-block{background:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
+.hero-panel{background:rgba(255,255,255,0.45);padding:30px 32px;}
+.hero-panel .hero-cta{margin-top:6px;}
+.hero-panel .title-block{margin-top:22px;}
+.jn-card{background:rgba(255,255,255,0.45);}
+.stats-band{background:rgba(255,255,255,0.4);}
+@media(max-width:640px){
+  .hero-inner{padding-top:56px;padding-bottom:56px;}
+  .hero-panel{padding:20px 18px;border-radius:18px;}
+  .hero-inner h1{max-width:none;font-size:clamp(1.7rem,8vw,2.2rem);}
+  .hero-inner .lede{font-size:.95rem;}
+  .hero-panel .title-block{margin-top:16px;}
+  #projectDetailBody .card,#experienceDetailBody .card{padding:14px;}
+  .card{padding:16px;}
+  .gallery{grid-template-columns:1fr;}
+  .jn-card{padding:14px 16px;}
+}
+.hero-panels{max-width:760px;}
+.hero-inner h1{max-width:none;}
+@media(max-width:640px){
+  .hero-panel .title-block{display:grid;grid-template-columns:1fr 1fr;}
+  .hero-panel .title-block .tb-title{grid-column:1/-1;}
+  .hero-panel .title-block .tb-cell{border-right:0;border-top:1px solid rgba(216,211,196,.6);}
+}
