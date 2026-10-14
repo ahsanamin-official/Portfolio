@@ -1360,3 +1360,23 @@ kbd{background:rgba(74,111,165,0.12);color:var(--navy);border-radius:4px;}
   .hero-panel .title-block .tb-title{grid-column:1/-1;}
   .hero-panel .title-block .tb-cell{border-right:0;border-top:1px solid rgba(216,211,196,.6);}
 }
+
+/* ===== No white boxes: content sits directly on the gradient ===== */
+.hero-panel,.card,.skills-col,.stats-band,.stat-item,.jn-card,.resource-card,
+#projectDetailBody .card,#experienceDetailBody .card,.sheet .card,.grid-2 .card,
+.gallery figure,.title-block,.title-block .tb-cell,.ps-card,.home-video-item,
+#breadcrumbBar,.search-widget .search-results,.btn.ghost{
+  background:transparent !important;
+  backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+  box-shadow:none !important;border-color:transparent !important;
+}
+.hero-panel{padding:8px 0 !important;border:0 !important;}
+.card,.skills-col,.jn-card{padding-left:0;padding-right:0;border-bottom:1px solid rgba(74,111,165,0.18) !important;border-radius:0;}
+#projectDetailBody .card,#experienceDetailBody .card{padding:0 !important;border:0 !important;}
+.title-block{border-top:1px solid rgba(74,111,165,.25) !important;border-radius:0;}
+.title-block .tb-title{background:transparent;color:var(--steel);}
+.btn.ghost{border:1px solid rgba(74,111,165,.4) !important;}
+.gallery figure{border-radius:var(--radius-md);overflow:hidden;}
+.gallery figcaption{padding:8px 2px;}
+.stats-band{padding:10px 0;}
+@media(max-width:640px){.hero-panel{padding:0 !important;}.card{padding-left:0;padding-right:0;}}
